@@ -1,1 +1,1 @@
-# GitIntro
+# Internship assignments
