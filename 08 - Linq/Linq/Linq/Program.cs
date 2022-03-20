@@ -159,9 +159,9 @@ namespace Linq
             var brandList = PopulateBrandList();
 
             var joinedCarBrands = from car in carList
-                                   join brand in brandList
-                                   on car.Brand equals brand.Name
-                                   select new { BrandName = car.Brand, ModelName = car.Model, BrandCountry = brand.Country };
+                                  join brand in brandList
+                                  on car.Brand equals brand.Name
+                                  select new { BrandName = car.Brand, ModelName = car.Model, BrandCountry = brand.Country };
 
             Console.WriteLine("Join--------");
             foreach (var car in joinedCarBrands)
@@ -170,7 +170,66 @@ namespace Linq
             }
             Console.WriteLine();
 
-            
+            //GroupJoin
+            var groupJoined = from brand in brandList
+                              join car in carList on brand.Name equals car.Brand
+                              into carGroups
+                              select new
+                              {
+                                  BrandName = brand.Name,
+                                  Models = carGroups
+                              };
+
+            Console.WriteLine("GroupJoin--");
+            foreach (var brand in groupJoined)
+            {
+                Console.WriteLine($"Brand: {brand.BrandName}");
+
+                foreach (var car in brand.Models)
+                {
+                    Console.WriteLine($"Model: {car.Model}");
+                }
+            }
+            Console.WriteLine();
+
+            //OuterJoin
+            var outerJoinedCarsBrands = from car in carList
+                                        join brand in brandList on car.Brand equals brand.Name into brandGroups
+                                        from brandName in brandGroups.DefaultIfEmpty()
+                                        select new
+                                        {
+                                            BrandName = car.Brand,
+                                            ModelName = car.Model,
+                                            BrandCountry = brandName?.Country
+                                        };
+
+            Console.WriteLine("OuterJoin---");
+            foreach (var car in outerJoinedCarsBrands)
+            {
+                Console.WriteLine($"{car.BrandName}, {car.ModelName}, {car.BrandCountry}");
+            }
+            Console.WriteLine();
+
+            //MyExtensionMethods
+            var myFilteredCarList = carList.Filter(x => x.Model.StartsWith('e') || x.Model.StartsWith('E'));
+
+            Console.WriteLine("MyFilter----");
+            PrintCarList(myFilteredCarList);
+            Console.WriteLine();
+
+
+            var hasBlueCar = carList.HasColor("blue");
+
+            Console.WriteLine("HasColor----");
+            Console.WriteLine($"Has blue car: {hasBlueCar}");
+            Console.WriteLine();
+
+
+            var carsWithLessHP = carList.CountCarsWhere(x => x.HorsePower < 200);
+
+            Console.WriteLine("CountCarsWhere");
+            Console.WriteLine($"{carsWithLessHP} car(s) with less then 200 HP exist in the list");
+            Console.WriteLine();
         }
 
         public static IEnumerable<Car> PopulateCarList()
