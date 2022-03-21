@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Linq;
 
 namespace Linq
@@ -230,6 +231,62 @@ namespace Linq
             Console.WriteLine("CountCarsWhere");
             Console.WriteLine($"{carsWithLessHP} car(s) with less then 200 HP exist in the list");
             Console.WriteLine();
+
+            //Cast
+            List<Int32> int32List = new List<Int32> { 1, 5, 2, 8, 9 };
+
+            var castedInt32List = int32List.Cast<int>();
+
+            Console.WriteLine("Cast--------");
+            foreach (var item in castedInt32List)
+            {
+                Console.WriteLine(item);
+            }
+            Console.WriteLine();
+
+            //ToLookup
+            var carsLookup = carList.ToLookup(x => x.HorsePower, x => x);
+
+            Console.WriteLine("ToLookup----");
+            foreach (var car in carsLookup)
+            {
+                Console.WriteLine(car.Key);
+                foreach (var attribute in car)
+                {
+                    Console.WriteLine(attribute);
+                }
+            }
+            Console.WriteLine();
+
+            //SelectMany
+            var selectManyCars = brandList.SelectMany(x => x.CarModels);
+
+            Console.WriteLine("SelectMany-");
+            foreach (var model in selectManyCars)
+            {
+                Console.WriteLine(model);
+            }
+            Console.WriteLine();
+
+            //Zip
+            var zipCarBrandList = carList.Zip(brandList);
+
+            Console.WriteLine("Zip--------");
+            foreach (var item in zipCarBrandList)
+            {
+                Console.WriteLine(item.First);
+                Console.WriteLine("-");
+                Console.WriteLine(item.Second);
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+
+            //Aggregate
+            var aggregateCarList = carList.Aggregate(false, (value, car) => value || (car.HorsePower > 500));
+
+            Console.WriteLine("Aggregate--");
+            Console.WriteLine("Is there a car with more than 500 HP: " + aggregateCarList);
+            Console.WriteLine();
         }
 
         public static IEnumerable<Car> PopulateCarList()
@@ -254,11 +311,11 @@ namespace Linq
         {
             List<CarBrand> brands = new List<CarBrand>
             {
-                new CarBrand { Name = "BMW", Year = 1900, Country = "Germany" },
-                new CarBrand { Name = "Audi", Year = 1920, Country = "Germany" },
-                new CarBrand { Name = "Volkswagen", Year = 1890, Country = "Germany" },
-                new CarBrand { Name = "Dacia", Year = 1945, Country = "Romania" },
-                new CarBrand { Name = "Hyundai", Year = 1930, Country = "South Korea" }
+                new CarBrand { Name = "BMW", Year = 1900, Country = "Germany", CarModels = new List<string> { "320i", "x6", "z4" } },
+                new CarBrand { Name = "Audi", Year = 1920, Country = "Germany", CarModels = new List<string> { "S3" } },
+                new CarBrand { Name = "Volkswagen", Year = 1890, Country = "Germany", CarModels = new List<string> { "Polo" } },
+                new CarBrand { Name = "Dacia", Year = 1945, Country = "Romania", CarModels = new List<string> { "Logan", "Stepway", "Duster" } },
+                new CarBrand { Name = "Hyundai", Year = 1930, Country = "South Korea", CarModels = new List<string> { "i30" } }
             };
 
             return brands;
