@@ -34,33 +34,20 @@ namespace MyCollection
         public void SwapItemsByIndex(int firstIndex, int secondIndex)
         {
             if (firstIndex < array.Length && secondIndex < array.Length && firstIndex >= 0 && secondIndex >= 0)
-            {
-                T temp = array[firstIndex];
-                array[secondIndex] = array[firstIndex];
-                array[firstIndex] = temp;
-            }
+                (array[firstIndex], array[secondIndex]) = (array[secondIndex], array[firstIndex]);
             else
                 throw new Exception("Index out of bounds");
         }
 
         public void SwapItemsByItem(T firstItem, T secondItem)
         {
-            int firstIndex = GetIndex(firstItem);
-            int secondIndex = GetIndex(secondItem);
+            int firstIndex = Array.IndexOf(array, firstItem);
+            int secondIndex = Array.IndexOf(array, secondItem);
 
             if (firstIndex >= 0 && secondIndex >= 0)
                 SwapItemsByIndex(firstIndex, secondIndex);
             else
                 throw new Exception("Item not found");
-        }
-
-        private int GetIndex(T item)
-        {
-            for (int i = 0; i < array.Length; i++)
-                if (array[i].Equals(item))
-                    return i;
-
-            return -1;
         }
     }
 }
