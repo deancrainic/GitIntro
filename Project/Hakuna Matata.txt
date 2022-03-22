@@ -1,0 +1,22 @@
+Airbnb-like App – Internship
+
+General:
+An app that helps people find accommodation in various locations.
+Registration:
+To register, the client must enter a unique username, a unique email, a password, full name.
+
+On the first page, the client must enter his destination, check-in date, check-out date, and the number of guests.
+
+When seeing the list, he can either sort by price, or by rating.
+
+Filter button should have price range, whole apartment / room.
+
+Listed accommodations will appear with their name, a photo, its rating and price per night and total price.
+
+When choosing an accommodation from the list, the client will see a gallery. Under the gallery there will be a short description of the place, its exact location, and the reservation form. 
+
+When clicking on the Reserve button, the client will be asked to log in.
+
+Under the reservation form there will be some reviews. - maybe
+
+When logged in, the client can also see a history of previous reservations.
