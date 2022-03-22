@@ -1,0 +1,6 @@
+As a User, I need to be able to register - 4
+As a User, I need to be able to log in - 2
+As a User, I need to be able to search for a destination - 5
+As a logged in User, I need to be able to see past reservations - 4
+As a logged in User, I need to be able to make a reservation, for a defined period of time - 3
+As a logged in User, I need to be able to pay with my credit card - 8
