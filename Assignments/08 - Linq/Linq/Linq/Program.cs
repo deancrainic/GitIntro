@@ -287,6 +287,27 @@ namespace Linq
             Console.WriteLine("Aggregate--");
             Console.WriteLine("Is there a car with more than 500 HP: " + aggregateCarList);
             Console.WriteLine();
+
+            int[] myArr = new List<int> { 4, 3 ,2 ,7 }.ToArray();
+
+
+
+            var colors = from brand in brandList
+                         join car in carList on brand.Name equals car.Brand
+                         where brand.Country.Equals("Germany") && (car.HorsePower > 500)
+                         select car.Color;
+
+            var colors2 = brandList.Join(carList,
+                            x => x.Name,
+                            x => x.Brand,
+                            (x, y) => new { x.Country, y.HorsePower, y.Color })
+                            .Where(x => x.Country.Equals("Germany") && x.HorsePower > 100)
+                            .Select(x => x.Color);
+
+
+            foreach(var color2 in colors)
+                Console.WriteLine(color2);
+
         }
 
         public static IEnumerable<Car> PopulateCarList()
