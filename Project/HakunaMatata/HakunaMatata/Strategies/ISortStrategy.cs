@@ -4,6 +4,6 @@ namespace HakunaMatata.Strategies
 {
     public interface ISortStrategy
     {
-        IEnumerable<PropertyModel> SortProperties(IEnumerable<PropertyModel> properties);
+        IEnumerable<Property> SortProperties(IEnumerable<Property> properties);
     }
 }

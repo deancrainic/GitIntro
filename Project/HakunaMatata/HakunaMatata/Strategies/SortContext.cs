@@ -11,12 +11,12 @@ namespace HakunaMatata.Strategies
             _strategy = strategy;
         }
 
-        public IEnumerable<PropertyModel> SortProperties(IEnumerable<PropertyModel> properties)
+        public IEnumerable<Property> SortProperties(IEnumerable<Property> properties)
         {
             if (_strategy == null)
             {
                 Console.WriteLine("No strategy");
-                return new List<PropertyModel>();
+                return new List<Property>();
             }
             else
                 return _strategy.SortProperties(properties);

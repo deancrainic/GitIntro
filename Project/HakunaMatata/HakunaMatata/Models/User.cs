@@ -1,6 +1,6 @@
 ﻿namespace HakunaMatata.Models
 {
-    public class UserModel
+    public class User
     {
         public int Id { get; set; }
         public string Email { get; set; }
@@ -10,9 +10,6 @@
         //public PropertyModel Property { get; set; }
         //public List<ReservationModel> PastReservations { get; set; }
 
-        public UserModel()
-        {
-
-        }
+        public User() {}
     }
 }

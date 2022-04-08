@@ -4,7 +4,7 @@ namespace HakunaMatata.Strategies
 {
     public class SortByPriceDescendingStrategy : ISortStrategy
     {
-        public IEnumerable<PropertyModel> SortProperties(IEnumerable<PropertyModel> properties)
+        public IEnumerable<Property> SortProperties(IEnumerable<Property> properties)
         {
             return properties.OrderByDescending(p => p.Price);
         }
