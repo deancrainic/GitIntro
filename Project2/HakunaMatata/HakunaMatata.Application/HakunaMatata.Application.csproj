@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HakunaMatata.Core\HakunaMatata.Core.csproj" />
+    <ProjectReference Include="..\HakunaMatata.Data\HakunaMatata.Data.csproj" />
   </ItemGroup>
 
 </Project>

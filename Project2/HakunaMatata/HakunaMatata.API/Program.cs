@@ -1,11 +1,32 @@
+//using HakunaMatata.Application.Commands;
+//using HakunaMatata.Application.Queries;
+using HakunaMatata.Application.Commands;
+using HakunaMatata.Core.Abstractions;
+using HakunaMatata.Data;
+using HakunaMatata.Data.Repositories;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//Repositories
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
+builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddMediatR(typeof(CreateUserCommand));
+
+//Database
+var cs = builder.Configuration.GetConnectionString("Default");
+builder.Services.AddDbContext<HakunaMatataContext>(options => options.UseSqlServer(cs), ServiceLifetime.Singleton);
 
 var app = builder.Build();
 
