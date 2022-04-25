@@ -9,5 +9,9 @@ namespace HakunaMatata.Core.Abstractions
 {
     public interface IUserRepository : IRepository<User>
     {
+        Task<IEnumerable<User>> GetAllAsync();
+        IEnumerable<User> GetAll();
+        Task<User> GetByIdAsync(int id);
+        User GetById(int id);
     }
 }

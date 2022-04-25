@@ -7,8 +7,8 @@
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        //public PropertyModel Property { get; set; }
-        //public List<ReservationModel> PastReservations { get; set; }
+        public Property Property { get; set; }
+        public List<Reservation> PastReservations { get; set; }
 
         public User() {}
     }

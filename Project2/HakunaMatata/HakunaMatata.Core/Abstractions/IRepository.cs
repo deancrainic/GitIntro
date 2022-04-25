@@ -13,8 +13,7 @@ namespace HakunaMatata.Core.Abstractions
         Task<T> GetByIdAsync(int id);
         T GetById(int id);
         void Update(T toUpdate);
-        void DeleteById(int id);
+        T DeleteById(int id);
         Task AddAsync(T entity);
-        Task SaveChanges();
     }
 }

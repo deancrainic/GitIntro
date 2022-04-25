@@ -9,5 +9,9 @@ namespace HakunaMatata.Core.Abstractions
 {
     public interface IReservationRepository : IRepository<Reservation>
     {
+        Task<IEnumerable<Reservation>> GetAllAsync();
+        IEnumerable<Reservation> GetAll();
+        Task<Reservation> GetByIdAsync(int id);
+        Reservation GetById(int id);
     }
 }

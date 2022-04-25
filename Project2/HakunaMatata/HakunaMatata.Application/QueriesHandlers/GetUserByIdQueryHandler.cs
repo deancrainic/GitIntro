@@ -12,16 +12,16 @@ namespace HakunaMatata.Application.QueriesHandlers
 {
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User>
     {
-        private IUserRepository _userRepository;
+        private IUnitOfWork _uow;
 
-        public GetUserByIdQueryHandler(IUserRepository userRepository)
+        public GetUserByIdQueryHandler(IUnitOfWork uow)
         {
-            _userRepository = userRepository;
+            _uow = uow;
         }
 
         public async Task<User> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _userRepository.GetByIdAsync(request.UserId);
+            return await _uow.UserRepository.GetByIdAsync(request.UserId);
         }
     }
 }

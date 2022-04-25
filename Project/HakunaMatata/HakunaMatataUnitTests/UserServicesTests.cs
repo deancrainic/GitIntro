@@ -3,6 +3,7 @@ using NUnit.Framework;
 using HakunaMatata.Services;
 using HakunaMatata.Repositories;
 using System.Collections.Generic;
+using Moq;
 
 namespace HakunaMatataUnitTests
 {

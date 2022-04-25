@@ -1,5 +1,6 @@
 ﻿using HakunaMatata.Application.Commands;
 using HakunaMatata.Core.Abstractions;
+using HakunaMatata.Core.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -9,21 +10,22 @@ using System.Threading.Tasks;
 
 namespace HakunaMatata.Application.CommandsHandlers
 {
-    public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
+    public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, User>
     {
-        private IUserRepository _userRepository;
+        private IUnitOfWork _uow;
 
-        public DeleteUserCommandHandler(IUserRepository userRepository)
+        public DeleteUserCommandHandler(IUnitOfWork uow)
         {
-            _userRepository = userRepository;
+            _uow = uow;
         }
 
-        public async Task<Unit> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async Task<User> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            _userRepository.DeleteById(request.UserId);
-            await _userRepository.SaveChanges();
+            var toDelete = _uow.UserRepository.DeleteById(request.UserId);
 
-            return new Unit();
+            await _uow.SaveAsync();
+
+            return toDelete;
         }
     }
 }

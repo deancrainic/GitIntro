@@ -25,9 +25,10 @@ namespace HakunaMatata.API.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             var query = new GetAllUsersQuery();
-            var result = await _mediator.Send(query);
-            var mappedResult = _mapper.Map<List<UserGetDto>>(result);
 
+            var result = await _mediator.Send(query);
+
+            var mappedResult = _mapper.Map<List<UserGetDto>>(result);
             return Ok(mappedResult);
         }
 
@@ -35,16 +36,25 @@ namespace HakunaMatata.API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
+            if (id <= 0)
+                return BadRequest("Invalid ID");
+
             var query = new GetUserByIdQuery { UserId = id };
             var result = await _mediator.Send(query);
-            var mappedResult = _mapper.Map<UserGetDto>(result);
 
+            if (result == null)
+                return NotFound();
+
+            var mappedResult = _mapper.Map<UserGetDto>(result);
             return Ok(mappedResult);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateUser(UserCreateDto newUser)
         {
+            if (newUser == null)
+                return BadRequest("New user can't be null");
+
             var command = new CreateUserCommand
             {
                 Email = newUser.Email,
@@ -53,9 +63,9 @@ namespace HakunaMatata.API.Controllers
                 LastName = newUser.LastName,
             };
 
-            var createdUser = await _mediator.Send(command);
+            var result = await _mediator.Send(command);
 
-            var mappedResult = _mapper.Map<UserGetDto>(createdUser);
+            var mappedResult = _mapper.Map<UserGetDto>(result);
             return Ok(mappedResult);
         }
 
@@ -63,41 +73,67 @@ namespace HakunaMatata.API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
+            if (id <= 0)
+                return BadRequest("Invalid ID");
+
             var command = new DeleteUserCommand { UserId = id };
 
-            await _mediator.Send(command);
+            var result = await _mediator.Send(command);
+
+            if (result == null)
+                return NotFound();
 
             return Ok();
         }
 
-        //[HttpPost]
-        //[Route("{ownerId}/property/{propertyId}")]
-        //public async Task<IActionResult> AddPropertyToUser(int ownerId, int propertyId)
-        //{
-        //    var command = new AddPropertyToUserCommand { OwnerId = ownerId, PropertyId = propertyId };
-        //    var result = await _mediator.Send(command);
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, UserCreateDto user)
+        {
+            if (id <= 0)
+                return BadRequest("Invalid ID");
 
-        //    var mappedResult = _mapper.Map<UserGetDto>(result);
-        //    return Ok(mappedResult);
-        //}
+            if (user == null)
+                return BadRequest("User can't be null");
 
-        //[HttpPut]
-        //[Route("{id}")]
-        //public async Task<IActionResult> UpdateUser(int id, UserCreateDto user)
-        //{
-        //    var command = new UpdateUserCommand
-        //    {
-        //        UserId = id,
-        //        Email = user.Email,
-        //        Password = user.Password,
-        //        FirstName = user.FirstName,
-        //        LastName = user.LastName
-        //    };
+            var command = new UpdateUserCommand
+            {
+                UserId = id,
+                Email = user.Email,
+                Password = user.Password,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
 
-        //    var result = await _mediator.Send(command);
+            var result = await _mediator.Send(command);
 
-        //    var mappedResult = _mapper.Map<UserGetDto>(result);
-        //    return Ok(mappedResult);
-        //}
+            if (result == null)
+                return NotFound();
+
+            var mappedResult = _mapper.Map<UserGetDto>(result);
+            return Ok(mappedResult);
+        } 
+
+        [HttpPost]
+        [Route("{userId}/property/{propertyId}")]
+        public async Task<IActionResult> AddPropertyToUser(int userId, int propertyId)
+        {
+            if (userId <= 0 || propertyId <= 0)
+                return BadRequest("Invalid ID");
+
+            var command = new AddPropertyToUserCommand
+            {
+                UserId = userId,
+                PropertyId = propertyId
+            };
+
+            var result = await _mediator.Send(command);
+
+            if (result == null)
+                return NotFound();
+
+            var mappedResult = _mapper.Map<UserGetDto>(result);
+            return Ok(mappedResult);
+        }
     }
 }

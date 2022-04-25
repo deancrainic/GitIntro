@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HakunaMatata.Core.Models
 {
@@ -14,8 +15,6 @@ namespace HakunaMatata.Core.Models
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        [ForeignKey("OwnerId")]
-        [NotMapped]
         public Property? Property { get; set; }
         public List<Reservation> Reservations { get; set; }
     }

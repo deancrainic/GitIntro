@@ -12,16 +12,16 @@ namespace HakunaMatata.Application.QueriesHandlers
 {
     public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, IEnumerable<User>>
     {
-        private IUserRepository _userRepository;
+        private IUnitOfWork _uow;
 
-        public GetAllUsersQueryHandler(IUserRepository userRepository)
+        public GetAllUsersQueryHandler(IUnitOfWork uow)
         {
-            _userRepository = userRepository;
+            _uow = uow;
         }
 
         public async Task<IEnumerable<User>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
-            return await _userRepository.GetAllAsync();
+            return await _uow.UserRepository.GetAllAsync();
         }
     }
 }

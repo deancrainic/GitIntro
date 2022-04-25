@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace HakunaMatata.Data.Repositories
 {
@@ -26,36 +27,34 @@ namespace HakunaMatata.Data.Repositories
             await _dbSet.AddAsync(entity);
         }
 
-        public void DeleteById(int id)
+        public T DeleteById(int id)
         {
             var toDelete = _dbSet.Find(id);
 
-            _dbSet.Remove(toDelete);
+            if (toDelete != null)
+                _dbSet.Remove(toDelete);
+
+            return toDelete;
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual IEnumerable<T> GetAll()
         {
             return _dbSet.ToList();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async virtual Task<IEnumerable<T>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
         }
 
-        public T GetById(int id)
+        public virtual T GetById(int id)
         {
             return _dbSet.Find(id);
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async virtual Task<T> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
-        }
-        
-        public async Task SaveChanges()
-        {
-            await _dbContext.SaveChangesAsync();
         }
 
         public void Update(T toUpdate)

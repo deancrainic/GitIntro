@@ -12,11 +12,11 @@ namespace HakunaMatata.Application.CommandsHandlers
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
     {
-        private IUserRepository _userRepository;
+        private IUnitOfWork _uow;
 
-        public CreateUserCommandHandler(IUserRepository userRepository)
+        public CreateUserCommandHandler(IUnitOfWork uow)
         {
-            _userRepository = userRepository;
+            _uow = uow;
         }
 
         public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -29,8 +29,8 @@ namespace HakunaMatata.Application.CommandsHandlers
                 LastName = request.LastName
             };
 
-            await _userRepository.AddAsync(user);
-            await _userRepository.SaveChanges();
+            await _uow.UserRepository.AddAsync(user);
+            await _uow.SaveAsync();
 
             return user;
         }

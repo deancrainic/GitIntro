@@ -9,5 +9,9 @@ namespace HakunaMatata.Core.Abstractions
 {
     public interface IPropertyRepository : IRepository<Property>
     {
+        Task<IEnumerable<Property>> GetAllAsync();
+        IEnumerable<Property> GetAll();
+        Task<Property> GetByIdAsync(int id);
+        Property GetById(int id);
     }
 }

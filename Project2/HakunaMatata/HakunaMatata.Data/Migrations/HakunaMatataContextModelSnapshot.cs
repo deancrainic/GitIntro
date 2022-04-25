@@ -71,9 +71,6 @@ namespace HakunaMatata.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
-
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
@@ -141,7 +138,12 @@ namespace HakunaMatata.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PropertyId")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
+
+                    b.HasIndex("PropertyId");
 
                     b.ToTable("Users");
                 });
@@ -164,6 +166,15 @@ namespace HakunaMatata.Data.Migrations
                     b.HasOne("HakunaMatata.Core.Models.User", null)
                         .WithMany("Reservations")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Property");
+                });
+
+            modelBuilder.Entity("HakunaMatata.Core.Models.User", b =>
+                {
+                    b.HasOne("HakunaMatata.Core.Models.Property", "Property")
+                        .WithMany()
+                        .HasForeignKey("PropertyId");
 
                     b.Navigation("Property");
                 });

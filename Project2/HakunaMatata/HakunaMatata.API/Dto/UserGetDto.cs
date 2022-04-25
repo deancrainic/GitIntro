@@ -9,7 +9,7 @@ namespace HakunaMatata.API.Dto
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public PropertyGetDto Property { get; set; }
+        public UserPropertyDto Property { get; set; }
         public List<Reservation> Reservations { get; set; }
     }
 }

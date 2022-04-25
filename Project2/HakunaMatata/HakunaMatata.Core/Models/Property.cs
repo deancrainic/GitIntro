@@ -9,7 +9,6 @@ namespace HakunaMatata.Core.Models
             Images = new List<Image>();
         }
         public int PropertyId { get; set; }
-        public int OwnerId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int MaxGuests { get; set; }
