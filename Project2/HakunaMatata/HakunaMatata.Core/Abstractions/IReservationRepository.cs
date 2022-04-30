@@ -13,5 +13,8 @@ namespace HakunaMatata.Core.Abstractions
         IEnumerable<Reservation> GetAll();
         Task<Reservation> GetByIdAsync(int id);
         Reservation GetById(int id);
+        Reservation GetByIdNoTracking(int id);
+        bool CheckDates(DateTime checkin, DateTime checkout, int propertyId);
+        bool CheckDates(DateTime checkin, DateTime checkout, int propertyId, int reservationId);
     }
 }

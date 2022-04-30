@@ -1,4 +1,5 @@
 ﻿using HakunaMatata.Application.Commands;
+using HakunaMatata.Application.Exceptions;
 using HakunaMatata.Core.Abstractions;
 using HakunaMatata.Core.Models;
 using MediatR;
@@ -23,11 +24,11 @@ namespace HakunaMatata.Application.CommandsHandlers
         {
             var property = _uow.PropertyRepository.GetById(request.PropertyId);
             if (property == null)
-                return null;
+                throw new IdNotExistentException("Property ID doesn't exist");
 
             var user = _uow.UserRepository.GetById(request.UserId);
             if (user == null)
-                return null;
+                throw new IdNotExistentException("User ID doesn't exist");
 
             user.Property = property;
             _uow.UserRepository.Update(user);

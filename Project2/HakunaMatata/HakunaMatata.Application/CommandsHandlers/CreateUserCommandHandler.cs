@@ -1,4 +1,5 @@
 ﻿using HakunaMatata.Application.Commands;
+using HakunaMatata.Application.Exceptions;
 using HakunaMatata.Core.Abstractions;
 using HakunaMatata.Core.Models;
 using MediatR;
@@ -21,6 +22,12 @@ namespace HakunaMatata.Application.CommandsHandlers
 
         public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
+            if (!_uow.UserRepository.CheckEmail(request.Email))
+                throw new InvalidEmailException("Email already exists");
+
+            if (!_uow.UserRepository.CheckPassword(request.Password))
+                throw new InvalidPasswordException("Password requirements aren't met");
+
             var user = new User
             {
                 Email = request.Email,

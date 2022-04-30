@@ -1,4 +1,5 @@
 ﻿using HakunaMatata.Application.Commands;
+using HakunaMatata.Application.Exceptions;
 using HakunaMatata.Core.Abstractions;
 using HakunaMatata.Core.Models;
 using MediatR;
@@ -20,20 +21,33 @@ namespace HakunaMatata.Application.CommandsHandlers
         }
         public async Task<Reservation> Handle(UpdateReservationCommand request, CancellationToken cancellationToken)
         {
-            var updatedReservation = new Reservation
+            var toUpdate = _uow.ReservationRepository.GetByIdNoTracking(request.ReservationId);
+            if (toUpdate == null)
+                throw new IdNotExistentException("Reservation ID doesn't exist");
+
+            if (!_uow.ReservationRepository.CheckDates(request.CheckinDate, request.CheckoutDate, toUpdate.Property.PropertyId, toUpdate.ReservationId))
+            {
+                throw new InvalidDatesException("Property is already reserved in this period");
+            }
+
+            if (request.CheckinDate > request.CheckoutDate)
+                throw new InvalidDatesException("Checkin date can't be later than checkoutdate");
+
+            var property = toUpdate.Property;
+            toUpdate = new Reservation
             {
                 ReservationId = request.ReservationId,
-                Property = _uow.PropertyRepository.GetById(request.PropertyId),
+                Property = property,
                 CheckinDate = request.CheckinDate,
                 CheckoutDate = request.CheckoutDate,
                 GuestsNumber = request.GuestsNumber,
                 TotalPrice = request.TotalPrice
             };
 
-            _uow.ReservationRepository.Update(updatedReservation);
+            _uow.ReservationRepository.Update(toUpdate);
             await _uow.SaveAsync();
 
-            return updatedReservation;
+            return toUpdate;
         }
     }
 }

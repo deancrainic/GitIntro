@@ -1,4 +1,5 @@
 ﻿using HakunaMatata.Application.Commands;
+using HakunaMatata.Application.Exceptions;
 using HakunaMatata.Core.Abstractions;
 using HakunaMatata.Core.Models;
 using MediatR;
@@ -21,7 +22,13 @@ namespace HakunaMatata.Application.CommandsHandlers
 
         public async Task<Property> Handle(UpdatePropertyCommand request, CancellationToken cancellationToken)
         {
-            var updatedProperty = new Property
+            var updatedProperty = _uow.PropertyRepository.GetByIdNoTracking(request.PropertyId);
+            if (updatedProperty == null)
+                throw new IdNotExistentException("Property ID doesn't exist");
+
+
+
+            updatedProperty = new Property
             {
                 PropertyId = request.PropertyId,
                 Name = request.Name,

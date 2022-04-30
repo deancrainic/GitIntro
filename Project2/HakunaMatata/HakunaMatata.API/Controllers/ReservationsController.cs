@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HakunaMatata.API.Dto;
 using HakunaMatata.Application.Commands;
+using HakunaMatata.Application.Exceptions;
 using HakunaMatata.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -67,10 +68,21 @@ namespace HakunaMatata.API.Controllers
                 TotalPrice = newReservation.TotalPrice
             };
 
-            var result = await _mediator.Send(command);
+            try
+            {
+                var result = await _mediator.Send(command);
 
-            var mappedResult = _mapper.Map<ReservationGetDto>(result);
-            return Ok(mappedResult);
+                var mappedResult = _mapper.Map<ReservationGetDto>(result);
+                return Ok(mappedResult);
+            }
+            catch (IdNotExistentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidDatesException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete]
@@ -92,7 +104,7 @@ namespace HakunaMatata.API.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> UpdateReservation(int id, ReservationCreateDto reservation)
+        public async Task<IActionResult> UpdateReservation(int id, ReservationUpdateDto reservation)
         {
             if (id <= 0)
                 return BadRequest("Invalid ID");
@@ -103,20 +115,27 @@ namespace HakunaMatata.API.Controllers
             var command = new UpdateReservationCommand
             {
                 ReservationId = id,
-                PropertyId = reservation.PropertyId,
                 CheckinDate = reservation.CheckinDate,
                 CheckoutDate = reservation.CheckoutDate,
                 GuestsNumber = reservation.GuestsNumber,
                 TotalPrice = reservation.TotalPrice
             };
 
-            var result = await _mediator.Send(command);
+            try
+            {
+                var result = await _mediator.Send(command);
 
-            if (result == null)
-                return NotFound();
-
-            var mappedResult = _mapper.Map<ReservationGetDto>(result);
-            return Ok(mappedResult);
+                var mappedResult = _mapper.Map<ReservationGetDto>(result);
+                return Ok(mappedResult);
+            }
+            catch (IdNotExistentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidDatesException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

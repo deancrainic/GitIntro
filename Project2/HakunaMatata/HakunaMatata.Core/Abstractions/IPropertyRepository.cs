@@ -13,5 +13,6 @@ namespace HakunaMatata.Core.Abstractions
         IEnumerable<Property> GetAll();
         Task<Property> GetByIdAsync(int id);
         Property GetById(int id);
+        Property GetByIdNoTracking(int id);
     }
 }

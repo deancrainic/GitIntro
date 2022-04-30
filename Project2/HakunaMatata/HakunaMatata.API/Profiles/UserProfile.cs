@@ -23,6 +23,7 @@ namespace HakunaMatata.API.Profiles
                 .ForMember(u => u.LastName, opt => opt.MapFrom(s => s.LastName));
 
             CreateMap<Property, UserPropertyDto>();
+            CreateMap<Reservation, UserReservationDto>();
         }
     }
 }

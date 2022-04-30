@@ -13,5 +13,8 @@ namespace HakunaMatata.Core.Abstractions
         IEnumerable<User> GetAll();
         Task<User> GetByIdAsync(int id);
         User GetById(int id);
+        User GetByIdNoTracking(int id);
+        bool CheckEmail(string email);
+        bool CheckPassword(string password);
     }
 }

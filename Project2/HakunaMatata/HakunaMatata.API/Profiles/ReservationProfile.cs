@@ -12,6 +12,8 @@ namespace HakunaMatata.API.Profiles
 
             CreateMap<ReservationCreateDto, Reservation>();
 
+            CreateMap<ReservationUpdateDto, Reservation>();
+
             CreateMap<Property, ReservationPropertyDto>();
         }
     }

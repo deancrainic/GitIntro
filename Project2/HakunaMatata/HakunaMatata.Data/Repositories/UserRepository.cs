@@ -36,5 +36,31 @@ namespace HakunaMatata.Data.Repositories
 
             return user;
         }
+
+        public bool CheckEmail(string email)
+        {
+            if (_dbSet.Any(u => u.Email == email))
+                return false;
+
+            return true;
+        }
+
+        public bool CheckPassword(string password)
+        {
+            if (password.Length < 8)
+                return false;
+
+            if (password.All(c => !char.IsDigit(c)))
+                return false;
+
+            return true;
+        }
+
+        public User GetByIdNoTracking(int id)
+        {
+            var user = _dbSet.AsNoTracking().Include(u => u.Property).Include(u => u.Reservations).SingleOrDefault(u => u.UserId == id);
+
+            return user;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HakunaMatata.API.Dto;
 using HakunaMatata.Application.Commands;
+using HakunaMatata.Application.Exceptions;
 using HakunaMatata.Application.Queries;
 using HakunaMatata.Core.Models;
 using MediatR;
@@ -63,10 +64,21 @@ namespace HakunaMatata.API.Controllers
                 LastName = newUser.LastName,
             };
 
-            var result = await _mediator.Send(command);
+            try
+            {
+                var result = await _mediator.Send(command);
 
-            var mappedResult = _mapper.Map<UserGetDto>(result);
-            return Ok(mappedResult);
+                var mappedResult = _mapper.Map<UserGetDto>(result);
+                return Ok(mappedResult);
+            }
+            catch (InvalidEmailException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidPasswordException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete]
@@ -105,14 +117,26 @@ namespace HakunaMatata.API.Controllers
                 LastName = user.LastName
             };
 
-            var result = await _mediator.Send(command);
-
-            if (result == null)
-                return NotFound();
+            try
+            {
+                var result = await _mediator.Send(command);
 
             var mappedResult = _mapper.Map<UserGetDto>(result);
             return Ok(mappedResult);
-        } 
+            }
+            catch (InvalidEmailException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidPasswordException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (IdNotExistentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
 
         [HttpPost]
         [Route("{userId}/property/{propertyId}")]
@@ -127,13 +151,43 @@ namespace HakunaMatata.API.Controllers
                 PropertyId = propertyId
             };
 
-            var result = await _mediator.Send(command);
+            try
+            {
+                var result = await _mediator.Send(command);
 
-            if (result == null)
-                return NotFound();
+                var mappedResult = _mapper.Map<UserGetDto>(result);
+                return Ok(mappedResult);
+            } 
+            catch (IdNotExistentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
 
-            var mappedResult = _mapper.Map<UserGetDto>(result);
-            return Ok(mappedResult);
+        [HttpPost]
+        [Route("{userId}/reservations/{reservationId}")]
+        public async Task<IActionResult> AddReservationToUser(int userId, int reservationId)
+        {
+            if (userId <= 0 || reservationId <= 0)
+                return BadRequest("Invalid ID");
+
+            var command = new AddReservationToUserCommand
+            {
+                UserId = userId,
+                ReservationId = reservationId
+            };
+
+            try
+            {
+                var result = await _mediator.Send(command);
+
+                var mappedResult = _mapper.Map<UserGetDto>(result);
+                return Ok(mappedResult);
+            }
+            catch (IdNotExistentException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

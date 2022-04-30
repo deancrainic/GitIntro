@@ -36,5 +36,38 @@ namespace HakunaMatata.Data.Repositories
 
             return reservation;
         }
+
+        public bool CheckDates(DateTime checkin, DateTime checkout, int propertyId)
+        {
+            if (_dbSet
+                .Where(r => r.Property.PropertyId == propertyId)
+                .Any(r =>
+                (checkin < r.CheckoutDate && checkin > r.CheckinDate) ||
+                (checkout > r.CheckinDate && checkout < r.CheckoutDate) ||
+                (checkin < r.CheckinDate && checkout > r.CheckoutDate)))
+                return false;
+
+            return true;
+        }
+
+        public bool CheckDates(DateTime checkin, DateTime checkout, int propertyId, int reservationId)
+        {
+            if (_dbSet
+                .Where(r => r.Property.PropertyId == propertyId && r.ReservationId != reservationId)
+                .Any(r =>
+                (checkin < r.CheckoutDate && checkin > r.CheckinDate) ||
+                (checkout > r.CheckinDate && checkout < r.CheckoutDate) ||
+                (checkin < r.CheckinDate && checkout > r.CheckoutDate)))
+                return false;
+
+            return true;
+        }
+
+        public Reservation GetByIdNoTracking(int id)
+        {
+            var reservation = _dbSet.AsNoTracking().Include(r => r.Property).SingleOrDefault(u => u.ReservationId == id);
+
+            return reservation;
+        }
     }
 }

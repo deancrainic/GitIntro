@@ -37,5 +37,12 @@ namespace HakunaMatata.Data.Repositories
 
             return property;
         }
+
+        public Property GetByIdNoTracking(int id)
+        {
+            var property = _dbSet.AsNoTracking().Include(p => p.Images).SingleOrDefault(p => p.PropertyId == id);
+
+            return property;
+        }
     }
 }

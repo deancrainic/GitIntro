@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HakunaMatata.API.Dto;
 using HakunaMatata.Application.Commands;
+using HakunaMatata.Application.Exceptions;
 using HakunaMatata.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -114,18 +115,22 @@ namespace HakunaMatata.API.Controllers
                 Price = property.Price
             };
 
-            var result = await _mediator.Send(command);
+            try
+            {
+                var result = await _mediator.Send(command);
 
-            if (result == null)
-                return NotFound();
-
-            var mappedResult = _mapper.Map<PropertyGetDto>(result);
-            return Ok(mappedResult);
+                var mappedResult = _mapper.Map<PropertyGetDto>(result);
+                return Ok(mappedResult);
+            }
+            catch (IdNotExistentException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost]
         [Route("{propertyId}/property/{imageId}")]
-        public async Task<IActionResult> AddPropertyToUser(int propertyId, int imageId)
+        public async Task<IActionResult> AddImageToProperty(int propertyId, int imageId)
         {
             if (propertyId <= 0 || imageId <= 0)
                 return BadRequest("Invalid ID");
@@ -136,13 +141,17 @@ namespace HakunaMatata.API.Controllers
                 ImageId = imageId
             };
 
-            var result = await _mediator.Send(command);
+            try
+            {
+                var result = await _mediator.Send(command);
 
-            if (result == null)
-                return NotFound();
-
-            var mappedResult = _mapper.Map<PropertyGetDto>(result);
-            return Ok(mappedResult);
+                var mappedResult = _mapper.Map<PropertyGetDto>(result);
+                return Ok(mappedResult);
+            }
+            catch (IdNotExistentException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

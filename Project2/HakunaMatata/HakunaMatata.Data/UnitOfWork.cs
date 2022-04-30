@@ -25,6 +25,10 @@ namespace HakunaMatata.Data
 
         public IImageRepository ImageRepository => new ImageRepository(_context);
 
+        public void ChangeState(object obj)
+        {
+            _context.Entry(obj).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+        }
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();

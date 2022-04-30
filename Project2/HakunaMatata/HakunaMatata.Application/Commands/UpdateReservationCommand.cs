@@ -11,7 +11,6 @@ namespace HakunaMatata.Application.Commands
     public class UpdateReservationCommand : IRequest<Reservation>
     {
         public int ReservationId { get; set; }
-        public int PropertyId { get; set; }
         public DateTime CheckinDate { get; set; }
         public DateTime CheckoutDate { get; set; }
         public int GuestsNumber { get; set; }
