@@ -1,0 +1,8 @@
+thead {
+    color: cornflowerblue;
+}
+
+td, th {
+    border: 1px solid #ddd;
+    /* padding: 30px; */
+}

@@ -1,0 +1,33 @@
+<p>This is {{pageTitle}}!</p>
+
+<p>Either sort by price or by name</p>
+<p>
+    <select [(ngModel)]="sortBy"> 
+        <option value="name">name</option>
+        <option value="price">price</option>
+    </select>
+    <button (click)="performSort()">Sort</button>
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th><button (click)="toggleImage()">
+                {{showImage? "Hide images" : "Show images"}}
+            </button></th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Max Guests</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let property of propertiesList">
+            <td><app-property-image *ngIf="showImage" [imageUrl]="property.imageUrl"></app-property-image></td>
+            <td>{{property.propertyName}}</td>
+            <td>{{property.propertyDescription}}</td>
+            <td>{{property.maxGuests}}</td>
+            <td>{{property.price}}</td>
+        </tr>
+    </tbody>
+</table>
