@@ -21,10 +21,12 @@ export class PropertyImageComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  //show img url in console from event
   getImgUrl():void {
     this.sendDataEvent.emit(this.imageUrl);
   }
 
+  //show img url string in console with @viewChild
   getImgUrlString(): string {
     return this.imageUrl;
   }

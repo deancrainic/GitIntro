@@ -34,7 +34,9 @@
             <td>{{property.propertyName}}</td>
             <td>{{property.propertyDescription}}</td>
             <td>{{property.maxGuests}}</td>
-            <td>{{property.price}}</td>
+            <td>{{property.price | scalePrice:percentage | currency:'USD'}}</td>
         </tr>
     </tbody>
 </table>
+<p>Prices are {{percentage/100 | percent}} more expensive this period.</p>
+<p>Confirming your reservation early means you'll get {{0.1 | percent}} off, up to {{100 | currency:'USD'}}</p>

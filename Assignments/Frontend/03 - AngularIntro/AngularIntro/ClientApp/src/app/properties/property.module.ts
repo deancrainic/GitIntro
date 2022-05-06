@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { PropertiesListComponent } from './properties-list/properties-list.component';
 import { PropertyImageComponent } from './property-image/property-image.component';
 import { FormsModule } from '@angular/forms';
+import { ScalePricePipe } from '../pipes/ScalePricePipe';
 
 @NgModule({
   declarations: [
     PropertiesListComponent,
-    PropertyImageComponent
+    PropertyImageComponent,
+    ScalePricePipe
   ],
   imports: [
     CommonModule,

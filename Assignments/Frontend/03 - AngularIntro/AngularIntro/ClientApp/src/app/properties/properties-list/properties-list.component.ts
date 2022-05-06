@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { IProperty } from '../models/property';
 import { PropertyImageComponent } from '../property-image/property-image.component';
 
@@ -12,6 +12,7 @@ export class PropertiesListComponent implements OnInit, AfterViewInit {
   pageTitle = 'Properties List';
   showImage = true;
   sortBy = 'name';
+  percentage = 12;
 
   @ViewChild('image') image!: PropertyImageComponent;
 
