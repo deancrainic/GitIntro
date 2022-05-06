@@ -1,17 +1,19 @@
-import { prepareSyntheticPropertyName } from '@angular/compiler/src/render3/util';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { IProperty } from '../models/property';
+import { PropertyImageComponent } from '../property-image/property-image.component';
 
 @Component({
   selector: 'app-properties-list',
   templateUrl: './properties-list.component.html',
   styleUrls: ['./properties-list.component.css']
 })
-export class PropertiesListComponent implements OnInit {
+export class PropertiesListComponent implements OnInit, AfterViewInit {
 
   pageTitle = 'Properties List';
-  showImage = false;
+  showImage = true;
   sortBy = 'name';
+
+  @ViewChild('image') image!: PropertyImageComponent;
 
   propertiesList: IProperty[] = [
     {
@@ -62,4 +64,11 @@ export class PropertiesListComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngAfterViewInit(): void {
+    console.log(this.image);
+}
+
+  imgUrl($event:string) {
+    console.log($event);
+  }
 }

@@ -23,7 +23,14 @@
     </thead>
     <tbody>
         <tr *ngFor="let property of propertiesList">
-            <td><app-property-image *ngIf="showImage" [imageUrl]="property.imageUrl"></app-property-image></td>
+            <td>
+                <app-property-image
+                    #image
+                    *ngIf="showImage" 
+                    [imageUrl]="property.imageUrl"
+                    (sendDataEvent)="imgUrl($event)">
+                </app-property-image>
+            </td>
             <td>{{property.propertyName}}</td>
             <td>{{property.propertyDescription}}</td>
             <td>{{property.maxGuests}}</td>

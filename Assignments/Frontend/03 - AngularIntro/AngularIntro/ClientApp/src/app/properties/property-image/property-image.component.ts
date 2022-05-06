@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-property-image',
@@ -13,9 +13,19 @@ export class PropertyImageComponent implements OnInit {
   @Input()
   imageUrl!: string;
 
+  @Output()
+  sendDataEvent: EventEmitter<string> = new EventEmitter<string>();
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  getImgUrl():void {
+    this.sendDataEvent.emit(this.imageUrl);
+  }
+
+  getImgUrlString(): string {
+    return this.imageUrl;
+  }
 }
