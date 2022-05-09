@@ -31,8 +31,8 @@
                     (sendDataEvent)="imgUrl($event)">
                 </app-property-image>
             </td>
-            <td>{{property.propertyName}}</td>
-            <td>{{property.propertyDescription}}</td>
+            <td>{{property.name}}</td>
+            <td>{{property.description}}</td>
             <td>{{property.maxGuests}}</td>
             <td>{{property.price | scalePrice:percentage | currency:'USD'}}</td>
         </tr>
@@ -40,3 +40,33 @@
 </table>
 <p>Prices are {{percentage/100 | percent}} more expensive this period.</p>
 <p>Confirming your reservation early means you'll get {{0.1 | percent}} off, up to {{100 | currency:'USD'}}</p>
+
+<h3>Data from api</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Address</th>
+            <th>Max Guests</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let property of propertiesObs | async">
+            <td>{{property.name}}</td>
+            <td>{{property.description}}</td>
+            <td>{{property.address}}</td>
+            <td>{{property.maxGuests}}</td>
+            <td>{{property.price | scalePrice:percentage | currency:'USD'}}</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>Press this button to post a property <button (click)="postProperty()">Post</button></p>
+
+<a [routerLink]="[1]">Property 1</a>
+<a [routerLink]="[3]">Property 3</a>
+<router-outlet></router-outlet>
+
+<p>Press this button to add an image to property 1 <button (click)="addImageToProperty1()">Add img</button></p>

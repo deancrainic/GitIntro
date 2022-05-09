@@ -1,0 +1,65 @@
+<p>user-reactive-form works!</p>
+
+<div style="border: solid rgb(4, 128, 185) 2px; width: 12rem; padding: 8px;">
+    <form [formGroup]="userViewModel" (ngSubmit)="onSubmit()">
+        <div style="display: flex; justify-content: left; flex-wrap: wrap; padding: 4px;">
+            <label for="email" style="padding: 2px;">
+                Email
+            </label>
+            <input 
+                type="text"
+                name="email"
+                formControlName="email"
+            />
+            <div *ngIf="email?.invalid && email?.touched">
+                Email is invalid
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: left; flex-wrap: wrap; padding: 4px;">
+            <label for="password">
+                Password
+            </label>
+            <input 
+                type="password"
+                name="password"
+                formControlName="password"
+            />
+            <div *ngIf="password?.invalid && password?.touched">
+                Password is invalid
+            </div>
+            <div *ngIf="password?.errors?.['forbiddenPassword']">
+                Password cannot be 12345678
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: left; flex-wrap: wrap; padding: 4px;">
+            <label for="firstName">
+                First name
+            </label>
+            <input 
+                type="text"
+                name="firstName"
+                formControlName="firstName"
+            />
+            <div *ngIf="firstName?.invalid && firstName?.touched">
+                First name is invalid
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: left; flex-wrap: wrap; padding: 4px;">
+            <label for="lastName">
+                Last name
+            </label>
+            <input 
+                type="text"
+                name="lastName"
+                formControlName="lastName"
+            />
+            <div *ngIf="lastName?.invalid && lastName?.touched">
+                Last name is invalid
+            </div>
+        </div>
+        <button type="submit" [disabled]="email?.invalid || password?.invalid || firstName?.invalid || lastName?.invalid || password?.errors?.['forbiddenPassword']">Submit</button>
+    </form>
+</div>

@@ -1,0 +1,37 @@
+<p>user works!</p>
+
+<div style="border: solid green 2px; width: 12rem; padding: 8px;">
+    <form #form="ngForm" (ngSubmit)="submitForm()">
+        <div style="display: flex; justify-content: left; flex-wrap: wrap; padding: 4px;">
+            <label for="email" style="padding: 2px;">Email</label>
+            <input 
+            type="text"
+            placeholder="Email"
+            [(ngModel)]="user.email"
+            name="email"
+            #email="ngModel"
+            required
+            />
+            <div *ngIf="email.touched && !email.valid" style="color: red">
+                Email invalid
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: left; flex-wrap: wrap; padding: 4px;">
+            <label for="password" style="padding: 2px;">Password</label>
+            <input 
+            type="password"
+            placeholder="Password"
+            [(ngModel)]="user.password"
+            name="password"
+            #password="ngModel"
+            required
+            />
+            <div *ngIf="!password.valid" style="color: red">
+                Password invalid
+            </div>
+        </div>
+        <button type="submit" [disabled]="!form.valid">Submit</button>
+        <div *ngIf="submitted"  style="color: lightgreen">Submitted</div>
+    </form>
+</div>

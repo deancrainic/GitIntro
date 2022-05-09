@@ -1,8 +1,9 @@
 export interface IProperty {
     propertyId: number;
-    propertyName: string;
-    propertyDescription: string;
+    name: string;
+    description: string;
+    address: string;
     maxGuests: number;
     price: number;
-    imageUrl: string;
+    imageUrl?: string;
 }

@@ -1,6 +1,10 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
+import { IImage } from 'src/app/image/image';
+import { PropertyService } from 'src/app/services/PropertyService';
 import { IProperty } from '../models/property';
 import { PropertyImageComponent } from '../property-image/property-image.component';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-properties-list',
@@ -18,32 +22,37 @@ export class PropertiesListComponent implements OnInit, AfterViewInit {
 
   propertiesList: IProperty[] = [
     {
-      propertyId : 1,
-      propertyName : "Sunset Villa",
-      propertyDescription : "Big villa near the beach",
-      maxGuests : 12,
+      propertyId: 1,
+      name: "Sunset Villa",
+      description: "Big villa near the beach",
+      address: "Mamaia, Romania",
+      maxGuests: 12,
       price: 6400,
-      imageUrl : "https://media.gettyimages.com/photos/luxury-apartment-with-private-pool-picture-id1198357646?s=612x612"
+      imageUrl: "https://media.gettyimages.com/photos/luxury-apartment-with-private-pool-picture-id1198357646?s=612x612"
     },
     {
-      propertyId : 2,
-      propertyName : "Log Cabin",
-      propertyDescription : "Log Cabin in the woods, pitoresque view",
-      maxGuests : 10,
+      propertyId: 2,
+      name: "Log Cabin",
+      description: "Log Cabin in the woods, pitoresque view",
+      address: "Poiana Brasov, Romania",
+      maxGuests: 10,
       price: 4600,
-      imageUrl : "https://www.christiesrealestate.com/blog/wp-content/uploads/2021/12/aerial-18-1.jpg"
+      imageUrl: "https://www.christiesrealestate.com/blog/wp-content/uploads/2021/12/aerial-18-1.jpg"
     },
     {
-      propertyId : 3,
-      propertyName : "zCozy Apartment",
-      propertyDescription : "Cozy apartment near city center",
-      maxGuests : 4,
+      propertyId: 3,
+      name: "zCozy Apartment",
+      description: "Cozy apartment near city center",
+      address: "Timisoara, Romania",
+      maxGuests: 4,
       price: 1500,
-      imageUrl : "https://images1.apartments.com/i2/uo03K21lP2hkPLvhuXSC8OBGAylS5QwLB7oX7gjjlaY/111/the-apartments-at-citycenter-washington-dc-primary-photo.jpg"
+      imageUrl: "https://images1.apartments.com/i2/uo03K21lP2hkPLvhuXSC8OBGAylS5QwLB7oX7gjjlaY/111/the-apartments-at-citycenter-washington-dc-primary-photo.jpg"
     }
   ];
 
-  constructor() { }
+  propertiesObs!: Observable<IProperty[]>;
+
+  constructor(private propertyService: PropertyService) { }
 
   toggleImage(): void {
     this.showImage = !this.showImage;
@@ -55,7 +64,7 @@ export class PropertiesListComponent implements OnInit, AfterViewInit {
       this.pageTitle = `Properties list sorted by ${this.sortBy}`;
     }
     else if (this.sortBy == 'name') {
-      this.propertiesList.sort((a, b) => a.propertyName > b.propertyName ? 1 : -1);
+      this.propertiesList.sort((a, b) => a.name > b.name ? 1 : -1);
       this.pageTitle = `Properties list sorted by ${this.sortBy}`;
     }
     else 
@@ -63,7 +72,8 @@ export class PropertiesListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-  }
+    this.propertiesObs = this.propertyService.getProperties();
+}
 
   ngAfterViewInit(): void {
     console.log(this.image);
@@ -71,5 +81,24 @@ export class PropertiesListComponent implements OnInit, AfterViewInit {
 
   imgUrl($event:string) {
     console.log($event);
+  }
+
+  postProperty(): void {
+    this.propertyService.postProperty({ 
+      name: "testProperty5", description: "empty", address: "idk", maxGuests: 9, price: 256 
+    }).subscribe(x => console.log(x));
+  }
+
+  img = new IImage();
+
+  addImageToProperty1(): void {
+    this.propertyService.postImage({
+      name: "pictureFromPropertiesListComponent",
+      path: "path_idk"
+    }).subscribe(x => this.img = x);
+    console.log(this.img);
+    
+    let newProp = this.propertyService.addImageToProperty(1, this.img.id).subscribe();
+    console.log(newProp);
   }
 }

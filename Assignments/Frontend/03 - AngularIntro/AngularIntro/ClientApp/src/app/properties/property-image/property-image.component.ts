@@ -11,7 +11,7 @@ export class PropertyImageComponent implements OnInit {
   imageMargin = 2;
 
   @Input()
-  imageUrl!: string;
+  imageUrl?: string;
 
   @Output()
   sendDataEvent: EventEmitter<string> = new EventEmitter<string>();
@@ -27,7 +27,7 @@ export class PropertyImageComponent implements OnInit {
   }
 
   //show img url string in console with @viewChild
-  getImgUrlString(): string {
+  getImgUrlString(): string | undefined {
     return this.imageUrl;
   }
 }
