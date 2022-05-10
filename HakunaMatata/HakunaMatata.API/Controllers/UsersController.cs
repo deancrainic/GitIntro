@@ -139,7 +139,7 @@ namespace HakunaMatata.API.Controllers
         }
 
         [HttpPost]
-        [Route("{userId}/property/{propertyId}")]
+        [Route("{userId}/Property/{propertyId}")]
         public async Task<IActionResult> AddPropertyToUser(int userId, int propertyId)
         {
             if (userId <= 0 || propertyId <= 0)

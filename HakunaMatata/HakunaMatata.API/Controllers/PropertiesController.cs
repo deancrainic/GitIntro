@@ -129,7 +129,7 @@ namespace HakunaMatata.API.Controllers
         }
 
         [HttpPost]
-        [Route("{propertyId}/property/{imageId}")]
+        [Route("{propertyId}/Images/{imageId}")]
         public async Task<IActionResult> AddImageToProperty(int propertyId, int imageId)
         {
             if (propertyId <= 0 || imageId <= 0)
