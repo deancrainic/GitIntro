@@ -15,14 +15,14 @@ export class SearchFormComponent implements OnInit {
     guests: new FormControl('', [Validators.required])
   });
 
+  submitted = true; //dont forget to change
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
   onSubmit(): void {
-    console.log();
-    
+    this.submitted = true;
   }
-
 }

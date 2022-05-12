@@ -1,39 +1,45 @@
-<div class="search-form">
-    <form [formGroup]="searchViewModel" (ngSubmit)="onSubmit()">
-        <span>
-            <mat-form-field appearance="outline" color="primary">
-                <mat-label>Location</mat-label>
-                <input matInput placeholder="Where do you want to go..."  formControlName="location" type="text">
-            </mat-form-field>
-        </span>         
-        
-        <span>
-            <mat-form-field appearance="outline">
-                <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="pickerCheckin" formControlName="checkin">
-                <mat-datepicker-toggle matSuffix [for]="pickerCheckin"></mat-datepicker-toggle>
-                <mat-datepicker #pickerCheckin=></mat-datepicker>
-            </mat-form-field>         
-        </span>
+<div class="front-page-container">
+    <div class="front-page-title"><h1>No worries for the rest of your days. Find an accomodation anywhere in the world!</h1></div>
 
-        <span>
-            <mat-form-field appearance="outline">
-                <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="pickerCheckout" formControlName="checkout">
-                <mat-datepicker-toggle matSuffix [for]="pickerCheckout"></mat-datepicker-toggle>
-                <mat-datepicker #pickerCheckout></mat-datepicker>
-            </mat-form-field>
-        </span>
+    <div class="search-form">
+        <form [formGroup]="searchViewModel" (ngSubmit)="onSubmit()">
+            <span>
+                <mat-form-field appearance="outline" color="primary">
+                    <mat-label>Location</mat-label>
+                    <input matInput placeholder="Where do you want to go..."  formControlName="location" type="text">
+                </mat-form-field>
+            </span>         
+            
+            <span>
+                <mat-form-field appearance="outline">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput [matDatepicker]="pickerCheckin" formControlName="checkin">
+                    <mat-datepicker-toggle matSuffix [for]="pickerCheckin"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerCheckin=></mat-datepicker>
+                </mat-form-field>         
+            </span>
 
-        <span>
-            <mat-form-field appearance="outline">
-                <mat-label>Guests</mat-label>
-                <input matInput placeholder="How many guests..."  formControlName="guests" type="number">
-            </mat-form-field>
-        </span>
+            <span>
+                <mat-form-field appearance="outline">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput [matDatepicker]="pickerCheckout" formControlName="checkout">
+                    <mat-datepicker-toggle matSuffix [for]="pickerCheckout"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerCheckout></mat-datepicker>
+                </mat-form-field>
+            </span>
 
-        <span>
-            <button mat-button type="submit"><mat-icon>search</mat-icon></button>
-        </span>
-    </form>
+            <span>
+                <mat-form-field appearance="outline">
+                    <mat-label>Guests</mat-label>
+                    <input matInput placeholder="How many guests..."  formControlName="guests" type="number">
+                </mat-form-field>
+            </span>
+
+            <span>
+                <button mat-button type="submit"><mat-icon>search</mat-icon></button>
+            </span>
+        </form>
+    </div>
 </div>
+
+<app-properties-list *ngIf="this.submitted"></app-properties-list>
