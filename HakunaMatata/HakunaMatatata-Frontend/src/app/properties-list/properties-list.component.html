@@ -1,15 +1,15 @@
 <div class="big-container">
     <div class="properties-list-container">
-        <mat-card *ngFor="let property of properties" (click)="doThis()" class="property-card">
-            <span>
-                <mat-card-title>{{this.property.name}}</mat-card-title>
-                <mat-card-content class="property-description">{{this.property.description}}</mat-card-content>
-                <mat-card-content class="property-address">{{this.property.address}}</mat-card-content>
-            </span>
-            <span>
-                <img class="property-image" src="https://magazine.elitehavens.com/wp-content/uploads/2021/05/Header.jpg" alt="shiba">
-                <mat-card-content class="property-price">{{this.property.price}} RON</mat-card-content>
-            </span>
+        <mat-card *ngFor="let property of this.shownProperties" (click)="doThis()" class="property-card">
+                <span>
+                    <mat-card-title>{{this.property.name}}</mat-card-title>
+                    <mat-card-content class="property-description">{{this.property.description}}</mat-card-content>
+                    <mat-card-content class="property-address">{{this.property.address}}</mat-card-content>
+                </span>
+                <span>
+                    <img class="property-image" src="https://magazine.elitehavens.com/wp-content/uploads/2021/05/Header.jpg" alt="shiba">
+                    <mat-card-content class="property-price">{{this.property.price}} RON</mat-card-content>
+                </span>
         </mat-card>
     </div>
 </div>

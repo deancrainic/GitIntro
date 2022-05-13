@@ -42,4 +42,10 @@
     </div>
 </div>
 
-<app-properties-list *ngIf="this.submitted"></app-properties-list>
+<app-properties-list 
+    *ngIf="this.submitted"
+    [location]="this.searchViewModel.value.location"
+    [checkin]="this.searchViewModel.value.checkin"
+    [checkout]="this.searchViewModel.value.checkout"
+    [guests]="this.searchViewModel.value.guests">
+</app-properties-list>

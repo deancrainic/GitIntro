@@ -15,7 +15,7 @@ export class SearchFormComponent implements OnInit {
     guests: new FormControl('', [Validators.required])
   });
 
-  submitted = true; //dont forget to change
+  submitted = false;
 
   constructor() { }
 
@@ -23,6 +23,6 @@ export class SearchFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.submitted = true;
+    this.submitted = !this.submitted;
   }
 }
