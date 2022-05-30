@@ -31,13 +31,13 @@
                 <a 
                     class="edit"
                     (click)="openModal(res.reservationId)"
-                    *ngIf="!checkDate(formatDate(res.checkinDate))">
+                    *ngIf="!checkDate(res.checkinDate)">
                     <mat-icon>edit</mat-icon>
                 </a>
                 <a 
                     class="delete" 
                     (click)="delete(res.reservationId)"
-                    *ngIf="!checkDate(formatDate(res.checkinDate))">
+                    *ngIf="!checkDate(res.checkinDate)">
                     <mat-icon>delete</mat-icon>
                 </a>
             </td>

@@ -42,9 +42,6 @@ export class EditReservationComponent implements OnInit {
   formatDate(d: Date): Date {
     let dateString = d.toString();
     let dateFormatted = new Date(dateString + 'Z');
-
-    console.log(d);
-    console.log(dateFormatted);
     
     return dateFormatted;
   }

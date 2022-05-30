@@ -47,9 +47,6 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
   formatDate(d: Date): Date {
     let dateString = d.toString();
     let dateFormatted = new Date(dateString + 'Z');
-
-    console.log(d);
-    console.log(dateFormatted);
     
     return dateFormatted;
   }
@@ -60,9 +57,5 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
 
   delete(reservationId: number): void {
     this.api.deleteReservation(reservationId).subscribe(res => this.reservations = this.api.getReservations());
-  }
-
-  edit(reservationId: number): void {
-    this.router.navigate(['/profile/reservations', reservationId]);
   }
 }
