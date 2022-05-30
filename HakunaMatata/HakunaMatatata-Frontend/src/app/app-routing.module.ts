@@ -38,9 +38,6 @@ const routes: Routes = [{
     component: ReservationsComponent
   }]
 }, {
-  path: 'profile/reservations/:id',
-  component: EditReservationComponent
-}, {
   path: '**', redirectTo: ''
 }];
 

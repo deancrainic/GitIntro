@@ -2,12 +2,12 @@
     <table mat-table [dataSource]="reservations" style="width: 70rem; max-width: 100%;">
         <ng-container matColumnDef="checkin">
             <th mat-header-cell *matHeaderCellDef>Check-in Date</th>
-            <td mat-cell *matCellDef="let res">{{res.checkinDate | date}}</td>
+            <td mat-cell *matCellDef="let res">{{formatDate(res.checkinDate) | date}}</td>
         </ng-container>
 
         <ng-container matColumnDef="checkout">
             <th mat-header-cell *matHeaderCellDef>Check-out Date</th>
-            <td mat-cell *matCellDef="let res">{{res.checkoutDate | date}}</td>
+            <td mat-cell *matCellDef="let res">{{formatDate(res.checkoutDate) | date}}</td>
         </ng-container>
 
         <ng-container matColumnDef="property">
@@ -30,14 +30,14 @@
             <td mat-cell *matCellDef="let res" class="buttons">
                 <a 
                     class="edit"
-                    (click)="edit(res.reservationId)"
-                    *ngIf="!checkDate(res.checkinDate)">
+                    (click)="openModal(res.reservationId)"
+                    *ngIf="!checkDate(formatDate(res.checkinDate))">
                     <mat-icon>edit</mat-icon>
                 </a>
                 <a 
                     class="delete" 
                     (click)="delete(res.reservationId)"
-                    *ngIf="!checkDate(res.checkinDate)">
+                    *ngIf="!checkDate(formatDate(res.checkinDate))">
                     <mat-icon>delete</mat-icon>
                 </a>
             </td>
@@ -46,41 +46,4 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-
-    <!-- <table class="reservation">
-        <thead class="info-head">
-            <td>Check-in Date</td>
-            <td>Check-out Date</td>
-            <td>Property</td>
-            <td>Total price</td>
-            <td>Guests</td>
-            <td></td>
-        </thead>
-
-        <tbody>
-            <tr 
-                *ngFor="let res of this.reservations | async"
-                [ngClass]="{'info': !checkDate(res.checkinDate), 'info-exp': checkDate(res.checkinDate)}">
-                <td>{{formatDate(res.checkinDate) | date}}</td>
-                <td>{{formatDate(res.checkoutDate) | date}}</td>
-                <td>{{res.property.name}}</td>
-                <td>{{res.totalPrice | currency: 'EUR'}}</td>
-                <td>{{res.guestsNumber}}</td>
-                <td class="buttons">
-                    <a
-                        class="edit"
-                        (click)="edit(res.reservationId)"
-                        *ngIf="!checkDate(res.checkinDate)">
-                        <mat-icon>edit</mat-icon>
-                    </a>
-                    <a 
-                        class="delete" 
-                        (click)="delete(res.reservationId)"
-                        *ngIf="!checkDate(res.checkinDate)">
-                        <mat-icon>delete</mat-icon>
-                    </a>
-                </td>
-            </tr>
-        </tbody>
-    </table> -->
 </div>

@@ -1,9 +1,9 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router'
 import { IReservation } from 'src/app/models/reservation';
-import { IReservationCreate } from 'src/app/models/reservationCreate';
 import { IReservationProperty } from 'src/app/models/reservationProperty';
 import { IReservationUpdate } from 'src/app/models/reservationUpdate';
 import { ApiService } from 'src/app/services/api.service';
@@ -16,7 +16,10 @@ import { ApiService } from 'src/app/services/api.service';
 export class EditReservationComponent implements OnInit {
 
   message!: string;
+  reserveErrorMessage!: string;
   reservation!: IReservation;
+  @Input()
+  reservationId!: number;
   property!: IReservationProperty;
 
   range = new FormGroup({
@@ -29,23 +32,36 @@ export class EditReservationComponent implements OnInit {
     guests: new FormControl('', [Validators.required])
   });
 
-  constructor(private api: ApiService, private activeRoute: ActivatedRoute, private router: Router, private date: DatePipe) { }
+  constructor(
+    private api: ApiService, 
+    private router: Router, 
+    private date: DatePipe,
+    public dialogRef: MatDialogRef<EditReservationComponent>
+  ) { }
+
+  formatDate(d: Date): Date {
+    let dateString = d.toString();
+    let dateFormatted = new Date(dateString + 'Z');
+
+    console.log(d);
+    console.log(dateFormatted);
+    
+    return dateFormatted;
+  }
 
   ngOnInit(): void {
-    this.activeRoute.params.subscribe(params => {
-      let reservationId = params['id'];
-      this.api.getReservationById(reservationId).subscribe(res => {
-        this.reservation = res,
-        this.range.controls['start'].setValue(new Date(res.checkinDate));
-        this.range.controls['end'].setValue(new Date(res.checkoutDate));
-        this.reservationForm.controls['guests'].setValue(res.guestsNumber);
-        this.property = res.property;
-      }, err => this.message = err.error)
-    });
+    this.api.getReservationById(this.reservationId).subscribe(res => {
+      this.reservation = res,
+      this.range.controls['start'].setValue(this.formatDate(new Date(res.checkinDate)));
+      this.range.controls['end'].setValue(this.formatDate(new Date(res.checkoutDate)));
+      this.reservationForm.controls['guests'].setValue(res.guestsNumber);
+      this.property = res.property;
+    }, err => this.message = err.error);
   }
 
   goToProperty(propertyId: number) {
     this.router.navigate(['property', propertyId]);
+    this.closeModal();
   }
 
   getTotalPrice(price: number): number {
@@ -62,6 +78,10 @@ export class EditReservationComponent implements OnInit {
       totalPrice: this.getTotalPrice(this.reservation.property.price),
     }
 
-    this.api.updateReservation(this.reservation.reservationId, res).subscribe(res => console.log("yes"), err => console.log("no"));
+    this.api.updateReservation(this.reservation.reservationId, res).subscribe(res => this.closeModal(), err => this.reserveErrorMessage = err.error);
+  }
+
+  closeModal() {
+    this.dialogRef.close();
   }
 }
