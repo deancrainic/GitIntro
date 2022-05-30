@@ -4,15 +4,26 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NavbarComponent } from './navbar/navbar.component';
-import { SearchFormComponent } from './search-form/search-form.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { SearchFormComponent } from './components/search-form/search-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { PropertiesListComponent } from './properties-list/properties-list.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { PropertiesListComponent } from './components/properties-list/properties-list.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { PropertyDetailsComponent } from './components/property-details/property-details.component';
+
 import { ApiService } from './services/api.service';
-import { HttpClientModule } from '@angular/common/http';
+import { ReservationDetailsTrasporterService } from './services/reservation-details-trasporter.service';
+import { AccountService } from './services/account.service';
+import { AuthInterceptor } from './services/auth.interceptor';
+import { DatePipe } from '@angular/common';
+import { ProfileComponent } from './components/profile/profile.component';
+import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
+import { PropertyComponent } from './components/property/property.component';
+import { ReservationsComponent } from './components/reservations/reservations.component';
+import { EditReservationComponent } from './components/edit-reservation/edit-reservation.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +32,13 @@ import { HttpClientModule } from '@angular/common/http';
     SearchFormComponent,
     LoginComponent,
     RegisterComponent,
-    PropertiesListComponent
+    PropertiesListComponent,
+    PropertyDetailsComponent,
+    ProfileComponent,
+    EditProfileComponent,
+    PropertyComponent,
+    ReservationsComponent,
+    EditReservationComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +49,16 @@ import { HttpClientModule } from '@angular/common/http';
     MaterialModule,
     HttpClientModule
   ],
-  providers: [ApiService],
+  providers: [
+    ApiService, 
+    ReservationDetailsTrasporterService, 
+    AccountService, 
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

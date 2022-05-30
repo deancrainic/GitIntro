@@ -1,0 +1,57 @@
+<div class="big-container">
+    <mat-card class="property-card" *ngIf="this.property | async as property">
+            <mat-card-title>{{property.name}}</mat-card-title>
+            <mat-card-content class="property-address">{{property.address}}</mat-card-content>
+
+            <mat-card-content>
+                <div class="img-gallery">
+                    <div class="left-side-gallery">
+                        <img src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-48509375/original/b1726498-95c5-47dd-829a-f23e8aacd93a.jpeg?im_w=1440" alt="">
+                    </div>
+
+                    <div class="right-side-gallery">
+                        <img class="top-img" src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-48509375/original/b1726498-95c5-47dd-829a-f23e8aacd93a.jpeg?im_w=1440" alt="">
+                        <img class="bot-img" src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-48509375/original/0862735b-4abc-4d87-a8d1-f2fb6053adc8.jpeg?im_w=1200" alt="">
+                    </div>
+                </div>
+            </mat-card-content>
+            <mat-card-content class="property-guests">Maximum {{property.maxGuests}} people</mat-card-content>
+            <mat-card-content class="property-description">{{property.description}}</mat-card-content>
+
+            <mat-card-content class="property-price">Price per night: {{property.price | currency: 'EUR'}}</mat-card-content>
+            <mat-card-content class="property-price">Total price: {{!this.reservationForm.valid ? 0 : this.getTotalPrice(property.price) | currency: 'EUR'}}</mat-card-content>
+
+            <span class="reservation-form">
+                <mat-card-content>
+                    <form [formGroup]="this.reservationForm" (ngSubmit)="makeReservation(property.price)">
+                        <span>
+                            <mat-form-field appearance="outline" color="primary">
+                                <mat-label>Enter a date range *</mat-label>
+                                <mat-date-range-input [formGroup]="this.range" [rangePicker]="picker">
+                                <input matStartDate formControlName="start" placeholder="Start date">
+                                <input matEndDate formControlName="end" placeholder="End date">
+                                </mat-date-range-input>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-date-range-picker #picker></mat-date-range-picker>
+                            </mat-form-field>
+                        </span>
+            
+                        <span>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Guests</mat-label>
+                                <input matInput placeholder="How many guests..."  formControlName="guests" type="number">
+                            </mat-form-field>
+                        </span>
+            
+                        <span>
+                            <button [disabled]="!this.reservationForm.valid" mat-button type="submit">Reserve</button>
+                        </span>
+
+                        <div class="error">
+                            <p>{{this.errorMessage}}</p>
+                        </div>
+                    </form>
+                </mat-card-content>
+            </span>
+    </mat-card>
+</div>

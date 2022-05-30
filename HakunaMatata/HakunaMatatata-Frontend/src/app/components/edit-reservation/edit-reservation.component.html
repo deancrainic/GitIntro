@@ -1,0 +1,43 @@
+<div class="container">
+    <div *ngIf="message === null || message === undefined">
+        <mat-card class="reservation-card">
+            <form [formGroup]="this.reservationForm" (ngSubmit)="updateReservation()">
+                <span>
+                    <mat-form-field appearance="outline" color="primary">
+                        <mat-label>Enter a date range *</mat-label>
+                        <mat-date-range-input [formGroup]="this.range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" placeholder="Start date">
+                        <input matEndDate formControlName="end" placeholder="End date">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+                </span>
+
+                <span>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Guests</mat-label>
+                        <input matInput placeholder="How many guests..."  formControlName="guests" type="number">
+                    </mat-form-field>
+                </span>
+
+                <span>
+                    <button [disabled]="!this.reservationForm.valid" mat-button type="submit">Reserve</button>
+                </span>
+
+                <div class="error">
+                    <p>{{this.message}}</p>
+                </div>
+            </form>
+            <mat-card-content>
+                <p class="property-name" (click)="goToProperty(property.propertyId)">Name: {{property?.name}}</p>
+            </mat-card-content>
+            <mat-card-content>
+                <p class="property-info">Address: {{property?.address}}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div *ngIf="message != null && message != undefined">
+        {{message}}
+    </div>
+</div>

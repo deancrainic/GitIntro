@@ -1,0 +1,45 @@
+.container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.reservation-card {
+    padding: 1.5rem;
+    display: flex;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline {
+    background-color: white;
+    border-radius: 5px;
+    margin-top: 0.5rem;
+}
+
+.mat-button {
+    background-color: #99C4C8;
+    border: 0.5px solid rgb(139, 135, 135) !important;
+}
+
+.mat-button:hover:enabled {
+    transition: .08s ease-in;
+    background-color: #85aaad;
+    border: 2px solid black !important;
+    color: white;
+}
+
+.property-name {
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.property-name:hover {
+    text-decoration: underline;
+}
+
+.property-info {
+    font-size: 1rem;
+}

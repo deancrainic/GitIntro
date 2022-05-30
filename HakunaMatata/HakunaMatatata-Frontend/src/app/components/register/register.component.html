@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="form-container">
+        <form [formGroup]="this.registerViewModel" class="register-form" (ngSubmit)="register()">
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>E-mail</mat-label>
+                <input matInput placeholder="Your email..." formControlName="email" type="email">
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>Password</mat-label>
+                <input matInput placeholder="Your password..." formControlName="password" type="password">
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>First name</mat-label>
+                <input matInput placeholder="Your first name..." formControlName="firstName" type="text">
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>Last name</mat-label>
+                <input matInput placeholder="Your last name..." formControlName="lastName" type="text">
+            </mat-form-field>
+            <div class="error">
+                <p>{{!this.registerViewModel.get('password')?.valid && this.registerViewModel.get('password')?.touched ? passwordMessage : errorMessage}}</p>
+            </div>
+            <button [disabled]="!this.registerViewModel.valid" mat-button type="submit" class="register-button">Register</button>
+            <p class="login-p">Already have an account? <span (click)="goToLogin()">Login here!</span></p>
+        </form>
+    </div>
+</div>
