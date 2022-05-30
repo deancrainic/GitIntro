@@ -33,8 +33,8 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
 
   openModal(reservationId: number) {
     this.dialogConfig.id = "projects-modal-component";
-    this.dialogConfig.height = "500px";
-    this.dialogConfig.width = "650px";
+    this.dialogConfig.height = "300px";
+    this.dialogConfig.width = "620px";
     this.modalDialog = this.matDialog.open(EditReservationComponent, this.dialogConfig);
     this.modalDialog.componentInstance.reservationId = reservationId;
     this.modalDialog.afterClosed().subscribe(res => this.ngOnInit());
