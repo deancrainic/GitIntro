@@ -1,1 +1,35 @@
-<p>property works!</p>
+<div class="form-container">
+    <form [formGroup]="this.propertyViewModel" class="property-form">
+        <div class="form-content-left">
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>Name</mat-label>
+                <input matInput placeholder="Property name..." formControlName="name" type="text">
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>Description</mat-label>
+                <textarea matInput cols="60" rows="10" placeholder="Description..." formControlName="description"></textarea>
+            </mat-form-field>
+        </div>
+
+        <div class="form-content-right">
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>Address</mat-label>
+                <input matInput placeholder="Address..." formControlName="address" type="text">
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>Guests</mat-label>
+                <input matInput placeholder="Guests..." formControlName="maxGuests" type="number">
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>Price</mat-label>
+                <input matInput placeholder="Price..." formControlName="price" type="number">
+            </mat-form-field>
+            <div class="buttons">
+                <button [disabled]="!this.propertyViewModel.valid" mat-button type="submit" class="submit-button" (click)="onSubmit()">
+                    {{this.currentProperty != null ? 'Edit property' : "Add property"}}
+                </button>
+                <button *ngIf="this.currentProperty != null" mat-button class="delete-button" (click)="deleteProperty()">Delete property</button>
+            </div>
+        </div>
+    </form>
+</div>

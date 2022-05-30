@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IProperty } from '../models/property';
+import { IPropertyCreate } from '../models/propertyCreate';
 import { IReservation } from '../models/reservation';
 import { IReservationCreate } from '../models/reservationCreate';
 import { IReservationUpdate } from '../models/reservationUpdate';
@@ -25,6 +26,14 @@ export class ApiService {
 
   getPropertyById(id: number): Observable<IProperty> {
     return this.http.get<IProperty>(`${this.baseUrl}/api/Properties/${id}`);
+  }
+
+  addProperty(property: IPropertyCreate): Observable<IProperty> {
+    return this.http.post<IProperty>(this.baseUrl + '/api/Properties/current', property);
+  }
+
+  deleteProperty(): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/api/Properties/property/current`);
   }
 
   makeReservation(reservation: IReservationCreate): Observable<IReservation> {
