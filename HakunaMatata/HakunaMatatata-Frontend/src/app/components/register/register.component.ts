@@ -14,8 +14,11 @@ export class RegisterComponent implements OnInit {
   registerViewModel = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8), forbiddenPassword]),
+    confirmedPassword: new FormControl('', [Validators.required, Validators.minLength(8), forbiddenPassword]),
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
+  }, {
+    validators: passwordMatch('password', 'confirmedPassword')
   });
 
   errorMessage!:string;
@@ -35,6 +38,7 @@ export class RegisterComponent implements OnInit {
       let user: IUserCreate = {
         email: this.registerViewModel.get('email')?.value,
         password: this.registerViewModel.get('password')?.value,
+        confirmedPassword: this.registerViewModel.get('confirmedPassword')?.value,
         firstName: this.registerViewModel.get('firstName')?.value,
         lastName: this.registerViewModel.get('lastName')?.value,
       };
@@ -61,3 +65,30 @@ export function forbiddenPassword(): ValidatorFn {
     return !passwordValid ? { invalidPassword: true }: null;
   }
 }
+
+export function passwordMatch(password: string, confirmPassword: string):ValidatorFn {
+  return (formGroup: AbstractControl):{ [key: string]: any } | null => {
+    const passwordControl = formGroup.get(password);
+    const confirmPasswordControl = formGroup.get(confirmPassword);
+    
+    if (!passwordControl || !confirmPasswordControl) {
+      return null;
+    }
+
+    if (
+      confirmPasswordControl.errors &&
+      !confirmPasswordControl.errors['passwordMismatch']
+    ) {
+      return null;
+    }
+
+    if (passwordControl.value !== confirmPasswordControl.value) {
+      confirmPasswordControl.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true }
+    } else {
+      confirmPasswordControl.setErrors(null);
+      return null;
+    }
+  };
+}
+

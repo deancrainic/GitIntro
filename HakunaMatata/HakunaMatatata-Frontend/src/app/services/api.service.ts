@@ -7,6 +7,7 @@ import { IReservation } from '../models/reservation';
 import { IReservationCreate } from '../models/reservationCreate';
 import { IReservationUpdate } from '../models/reservationUpdate';
 import { IUser } from '../models/user';
+import { IUserCreate } from '../models/userCreate';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,10 @@ export class ApiService {
 
   getCurrentUser(): Observable<IUser> {
     return this.http.get<IUser>(this.baseUrl + '/api/Users/current');
+  }
+
+  updateUser(user: IUserCreate): Observable<IUser> {
+    return this.http.put<IUser>(this.baseUrl + '/api/Users/current', user);
   }
 
   getAllProperties(): Observable<IProperty[]> {
@@ -33,7 +38,11 @@ export class ApiService {
   }
 
   deleteProperty(): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/api/Properties/property/current`);
+    return this.http.delete<void>(`${this.baseUrl}/api/Properties/current`);
+  }
+
+  updateProperty(property: IPropertyCreate): Observable<IProperty> {
+    return this.http.put<IProperty>(`${this.baseUrl}/api/Properties/current`, property);
   }
 
   makeReservation(reservation: IReservationCreate): Observable<IReservation> {

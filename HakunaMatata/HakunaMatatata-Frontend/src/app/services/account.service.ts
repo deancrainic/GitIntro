@@ -53,7 +53,6 @@ export class AccountService {
 
     if (loginCookie == '1') {
       if (localStorage.getItem('token') === null || localStorage.getItem('token') === undefined) {
-        this.loginStatus.next(false);
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         localStorage.removeItem('exp');
@@ -64,7 +63,6 @@ export class AccountService {
       let exp = Number.parseInt(<string>localStorage.getItem('exp'));
 
       if (exp === null || exp === undefined) {
-        this.loginStatus.next(false);
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         localStorage.removeItem('exp');
@@ -76,7 +74,6 @@ export class AccountService {
         return true;
       }
 
-      this.loginStatus.next(false);
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
       localStorage.removeItem('exp');

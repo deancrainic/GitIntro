@@ -12,8 +12,8 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class PropertyComponent implements OnInit {
 
-  currentUser!:IUser;
-  currentProperty!:IProperty;
+  currentUser!: IUser;
+  currentProperty!: IProperty | null;
   propertyViewModel = new FormGroup({
     name: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
@@ -21,22 +21,22 @@ export class PropertyComponent implements OnInit {
     maxGuests: new FormControl('', [Validators.required]),
     price: new FormControl('', Validators.required)
   });
+  message!: string;
 
   constructor(private api: ApiService) { }
 
   ngOnInit(): void {
     this.api.getCurrentUser().subscribe(x => {
-      this.currentUser = x;
-      if (this.currentUser.property != null || this.currentUser.property != undefined) {
-        this.api.getPropertyById(this.currentUser.property.propertyId).subscribe(p => {
-          this.currentProperty = p;
+      this.currentProperty = x.property;
 
-          this.propertyViewModel.controls['name'].setValue(this.currentProperty.name);
-          this.propertyViewModel.controls['description'].setValue(this.currentProperty.description);
-          this.propertyViewModel.controls['address'].setValue(this.currentProperty.address);
-          this.propertyViewModel.controls['maxGuests'].setValue(this.currentProperty.maxGuests);
-          this.propertyViewModel.controls['price'].setValue(this.currentProperty.price);
-        });
+      if (this.currentProperty != null) {
+        this.propertyViewModel.controls['name'].setValue(this.currentProperty.name);
+        this.propertyViewModel.controls['description'].setValue(this.currentProperty.description);
+        this.propertyViewModel.controls['address'].setValue(this.currentProperty.address);
+        this.propertyViewModel.controls['maxGuests'].setValue(this.currentProperty.maxGuests);
+        this.propertyViewModel.controls['price'].setValue(this.currentProperty.price);
+      } else {
+        this.propertyViewModel.reset();
       }
     });
   }
@@ -49,10 +49,15 @@ export class PropertyComponent implements OnInit {
       maxGuests: this.propertyViewModel.get('maxGuests')?.value,
       price: this.propertyViewModel.get('price')?.value,
     };
-    this.api.addProperty(createdProperty).subscribe(res => { this.ngOnInit(); }, err => console.log('wrong'));
+
+    if (this.currentProperty == null) {
+      this.api.addProperty(createdProperty).subscribe(res => this.message = 'Successfully added', err => console.log('wrong'));
+    } else {
+      this.api.updateProperty(createdProperty).subscribe(res => this.message = 'Successfully edited', err => console.log(err.error));
+    }
   }
 
   deleteProperty(): void {
-    this.api.deleteProperty().subscribe(res => { this.ngOnInit(); }, err => console.log('wrong'));
+    this.api.deleteProperty().subscribe(res => this.ngOnInit(), err => console.log('wrong'));
   }
 }

@@ -12,9 +12,9 @@
                 <hr>
             </div>
             <div class="links">
-                <a class="button" [routerLinkActive]="['active']" routerLink="/profile/edit">Edit profile</a>
-                <a class="button" [routerLinkActive]="['active']" routerLink="/profile/property">{{currentUser.property == null ? 'Add property' : 'View property'}}</a>
-                <a class="button" [routerLinkActive]="['active']" routerLink="/profile/reservations">View reservations</a>
+                <a class="button" [routerLinkActive]="['active']" routerLink="/profile/edit">Details</a>
+                <a class="button" [routerLinkActive]="['active']" routerLink="/profile/property">Property</a>
+                <a class="button" [routerLinkActive]="['active']" routerLink="/profile/reservations">Reservations</a>
             </div>
             <hr class="profile-card-hr">
             <router-outlet></router-outlet>

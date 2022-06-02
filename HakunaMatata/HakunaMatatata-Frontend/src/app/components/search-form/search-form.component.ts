@@ -13,14 +13,14 @@ import { ReservationDetailsTrasporterService } from '../../services/reservation-
 export class SearchFormComponent implements OnInit {
 
   range = new FormGroup({
-    start: new FormControl('', [Validators.required]),
-    end: new FormControl('', [Validators.required]),
+    start: new FormControl(''),
+    end: new FormControl(''),
   });
 
   searchViewModel = new FormGroup({
-    location: new FormControl('', [Validators.required]),
+    location: new FormControl(''),
     range: this.range,
-    guests: new FormControl('', [Validators.required])
+    guests: new FormControl('')
   });
  
   properties!: IProperty[];

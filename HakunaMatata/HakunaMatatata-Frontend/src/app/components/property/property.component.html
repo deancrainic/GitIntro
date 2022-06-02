@@ -28,8 +28,9 @@
                 <button [disabled]="!this.propertyViewModel.valid" mat-button type="submit" class="submit-button" (click)="onSubmit()">
                     {{this.currentProperty != null ? 'Edit property' : "Add property"}}
                 </button>
-                <button *ngIf="this.currentProperty != null" mat-button class="delete-button" (click)="deleteProperty()">Delete property</button>
+                <p>{{message}}</p>
             </div>
         </div>
     </form>
+    <button *ngIf="this.currentProperty != null" mat-button class="delete-button" (click)="deleteProperty()">Delete property</button>
 </div>
