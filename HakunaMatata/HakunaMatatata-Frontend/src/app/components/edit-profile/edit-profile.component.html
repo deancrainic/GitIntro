@@ -23,7 +23,12 @@
             </mat-form-field>
      </div>
         <div class="error">
-            <p>{{!this.updateViewModel.get('password')?.valid && this.updateViewModel.get('password')?.touched ? passwordMessage : errorMessage}}</p>
+            <p>{{errorMessage}}</p>
+                <p *ngIf="this.updateViewModel.get('password')?.errors?.['invalidPassword']
+                    || this.updateViewModel.get('password')?.errors?.['minlength']"
+                    >Password must be at least 8 characters long and must contain at least one digit</p>
+                <p *ngIf="this.updateViewModel.get('confirmedPassword')?.errors?.['passwordMismatch'] &&
+                    this.updateViewModel.get('confirmedPassword')?.touched">Confirmed password does not match</p>
         </div>
         <button [disabled]="!this.updateViewModel.valid" mat-button type="submit" class="register-button">Confirm changes</button>
     </form>

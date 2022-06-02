@@ -22,7 +22,12 @@
                 <input matInput placeholder="Your last name..." formControlName="lastName" type="text">
             </mat-form-field>
             <div class="error">
-                <p>{{!this.registerViewModel.get('password')?.valid && this.registerViewModel.get('password')?.touched ? passwordMessage : errorMessage}}</p>
+                <p>{{errorMessage}}</p>
+                <p *ngIf="this.registerViewModel.get('password')?.errors?.['invalidPassword']
+                    || this.registerViewModel.get('password')?.errors?.['minlength']"
+                    >Password must be at least 8 characters long and must contain at least one digit</p>
+                <p *ngIf="this.registerViewModel.get('confirmedPassword')?.errors?.['passwordMismatch'] &&
+                    this.registerViewModel.get('confirmedPassword')?.touched">Confirmed password does not match</p>
             </div>
             <button [disabled]="!this.registerViewModel.valid" mat-button type="submit" class="register-button">Register</button>
             <p class="login-p">Already have an account? <span (click)="goToLogin()">Login here!</span></p>

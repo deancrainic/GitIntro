@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { SearchFormComponent } from './components/search-form/search-form.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -24,6 +24,7 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
 import { PropertyComponent } from './components/property/property.component';
 import { ReservationsComponent } from './components/reservations/reservations.component';
 import { EditReservationComponent } from './components/edit-reservation/edit-reservation.component';
+import { CustomValidators } from './validators/validators';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,9 @@ import { EditReservationComponent } from './components/edit-reservation/edit-res
       useClass: AuthInterceptor,
       multi: true
     },
-    DatePipe],
+    DatePipe,
+    CustomValidators
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

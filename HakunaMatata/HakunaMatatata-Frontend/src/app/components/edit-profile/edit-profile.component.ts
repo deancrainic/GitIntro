@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { IUser } from 'src/app/models/user';
 import { IUserCreate } from 'src/app/models/userCreate';
 import { ApiService } from 'src/app/services/api.service';
-import { forbiddenPassword, passwordMatch } from '../register/register.component';
+import { CustomValidators } from 'src/app/validators/validators';
 
 @Component({
   selector: 'app-edit-profile',
@@ -16,16 +16,15 @@ export class EditProfileComponent implements OnInit {
   currentUser!: IUser;
   updateViewModel = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.minLength(8), forbiddenPassword]),
-    confirmedPassword: new FormControl('', [Validators.minLength(8), forbiddenPassword]),
+    password: new FormControl('', [Validators.minLength(8), CustomValidators.forbiddenPassword()]),
+    confirmedPassword: new FormControl('', []),
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
   },
-    passwordMatch('password', 'confirmedPassword')
+    CustomValidators.passwordMatch('password', 'confirmedPassword')
   );
 
   errorMessage!:string;
-  passwordMessage = "Password must be at least 8 characters long and must contain at least one digit";
 
   constructor(private api: ApiService, private router: Router) { }
 
