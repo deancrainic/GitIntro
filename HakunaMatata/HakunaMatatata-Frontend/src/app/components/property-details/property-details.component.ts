@@ -9,6 +9,7 @@ import { ApiService } from '../../services/api.service';
 import { ReservationDetailsTrasporterService } from '../../services/reservation-details-trasporter.service';
 import { DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
+import { DateRange } from 'src/app/models/dateRange';
 
 @Component({
   selector: 'app-property-details',
@@ -40,6 +41,8 @@ export class PropertyDetailsComponent implements OnInit {
   subscription4!: Subscription;
 
   errorMessage!: string;
+  unavailableDays!: DateRange[];
+  availableDays!:any;
 
   constructor(
     private api: ApiService, 
@@ -49,10 +52,38 @@ export class PropertyDetailsComponent implements OnInit {
     private acc: AccountService,
     private date: DatePipe) { }
 
+  formatDate(d: Date): Date {
+    let dateString = d.toString();
+    let dateFormatted = new Date(dateString + 'Z');
+    
+    return dateFormatted;
+  }
+
   ngOnInit(): void {
     this.activeRoute.params.subscribe(params => this.propertyId = params['id']);
     this.property = this.api.getPropertyById(this.propertyId);
-
+    
+    this.property.subscribe(res => {
+      this.api.getReservationDatesByPropertyId(res.propertyId).subscribe(x => {
+        this.unavailableDays = x;
+        this.availableDays = (d: Date): boolean => {
+          let valid = true;
+          this.unavailableDays.forEach(dr => {
+            let currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() - 1);
+            if (this.formatDate(d) < this.formatDate(currentDate)) {
+              valid = false;
+            } else {
+              if (this.formatDate(d) >= this.formatDate(new Date(dr.checkinDate)) && this.formatDate(d) < this.formatDate(new Date(dr.checkoutDate)))
+                valid = false;
+            }
+          });
+      
+          return valid;
+        };
+      });
+    });
+    
     this.subscription1 = this.transporter.currentEndDate.subscribe(d => this.endDate = d);
     this.subscription2 = this.transporter.currentStartDate.subscribe(d => this.startDate = d);
     this.subscription3 = this.transporter.currentGuests.subscribe(g => this.guests = g);

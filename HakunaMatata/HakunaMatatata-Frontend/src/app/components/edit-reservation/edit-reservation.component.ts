@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router'
+import { DateRange } from 'src/app/models/dateRange';
 import { IReservation } from 'src/app/models/reservation';
 import { IReservationProperty } from 'src/app/models/reservationProperty';
 import { IReservationUpdate } from 'src/app/models/reservationUpdate';
@@ -32,6 +33,9 @@ export class EditReservationComponent implements OnInit {
     guests: new FormControl('', [Validators.required])
   });
 
+  unavailableDays!: DateRange[];
+  availableDays!:any;
+
   constructor(
     private api: ApiService, 
     private router: Router, 
@@ -49,10 +53,34 @@ export class EditReservationComponent implements OnInit {
   ngOnInit(): void {
     this.api.getReservationById(this.reservationId).subscribe(res => {
       this.reservation = res,
-      this.range.controls['start'].setValue(this.formatDate(new Date(res.checkinDate)));
-      this.range.controls['end'].setValue(this.formatDate(new Date(res.checkoutDate)));
+      this.range.controls['start'].setValue(this.formatDate(res.checkinDate));
+      this.range.controls['end'].setValue(this.formatDate(res.checkoutDate));
       this.reservationForm.controls['guests'].setValue(res.guestsNumber);
       this.property = res.property;
+      
+      this.api.getReservationDatesByPropertyId(res.property.propertyId).subscribe(x => {
+        this.unavailableDays = x;
+        this.availableDays = (d: Date): boolean => {
+          let valid = true;
+          this.unavailableDays.forEach(dr => {
+            let currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() - 1);
+            
+            if (this.formatDate(d) < this.formatDate(currentDate)) {
+              valid = false;
+            } else {
+              if (this.formatDate(d) >= this.formatDate(new Date(dr.checkinDate)) && 
+                  this.formatDate(d) < this.formatDate(new Date(dr.checkoutDate)) && 
+                  (this.formatDate(d) < this.formatDate(this.reservation.checkinDate) ||
+                  this.formatDate(d) >= this.formatDate(this.reservation.checkoutDate))) {
+                valid = false;
+              }
+            }
+          });
+      
+          return valid;
+        };
+      });
     }, err => this.message = err.error);
   }
 

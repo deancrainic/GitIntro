@@ -1,4 +1,3 @@
-import { IProperty } from "./property";
 import { IReservationProperty } from "./reservationProperty";
 
 export interface IReservation {

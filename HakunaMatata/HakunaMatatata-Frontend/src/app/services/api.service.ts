@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { DateRange } from '../models/dateRange';
 import { IProperty } from '../models/property';
 import { IPropertyCreate } from '../models/propertyCreate';
 import { IReservation } from '../models/reservation';
@@ -59,6 +60,10 @@ export class ApiService {
 
   getReservationById(reservationId: number): Observable<IReservation> {
     return this.http.get<IReservation>(`${this.baseUrl}/api/Reservations/current/${reservationId}`)
+  }
+
+  getReservationDatesByPropertyId(propertyId: number): Observable<DateRange[]> {
+    return this.http.get<DateRange[]>(`${this.baseUrl}/api/Reservations/property/${propertyId}`)
   }
 
   updateReservation(reservationId: number, reservation: IReservationUpdate): Observable<IReservation> {
