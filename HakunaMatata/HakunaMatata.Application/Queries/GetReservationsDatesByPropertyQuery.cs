@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace HakunaMatata.Application.Queries
 {
-    public class GetImageByIdQuery : IRequest<Image>
+    public class GetReservationsDatesByPropertyQuery : IRequest<IEnumerable<Reservation>>
     {
-        public int ImageId { get; set; }
+        public int PropertyId { get; set; }
     }
 }

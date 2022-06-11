@@ -1,14 +1,15 @@
 ﻿using HakunaMatata.Core.Models;
-using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HakunaMatata.Application.Queries
+namespace HakunaMatata.Data.Services
 {
-    public class GetAllUsersQuery : IRequest<IEnumerable<User>>
+    public interface ITokenService
     {
+        string CreateToken(User user);
+        int DecodeToken(string token);
     }
 }

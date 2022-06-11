@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
-using HakunaMatata.API.Dto;
 using HakunaMatata.Application.Commands;
-using HakunaMatata.Application.Queries;
+using HakunaMatata.Data.DTOs;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HakunaMatata.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ImagesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -19,75 +20,64 @@ namespace HakunaMatata.API.Controllers
             _mediator = mediator;
             _mapper = mapper;
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllImages()
-        {
-            var query = new GetAllImagesQuery();
-
-            var result = await _mediator.Send(query);
-            var mappedResult = _mapper.Map<List<ImageGetDto>>(result);
-
-            return Ok(mappedResult);
-        }
-
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetImageById(int id)
-        {
-            if (id <= 0)
-                return BadRequest("Invalid ID");
-
-            var query = new GetImageByIdQuery
-            {
-                ImageId = id
-            };
-
-            var result = await _mediator.Send(query);
-
-            if (result == null)
-                return NotFound();
-
-            var mappedResult = _mapper.Map<ImageGetDto>(result);
-            return Ok(mappedResult);
-        }
-
+        //IList<IFormFile> formFiles
         [HttpPost]
-        public async Task<IActionResult> CreateImage(ImageCreateDto newImage)
+        public async Task<IActionResult> UploadImages()
         {
-            if (newImage == null)
-                return BadRequest("New image can't be null");
+            var token = Request.Headers.FirstOrDefault(x => x.Key == "Authorization").Value.ToString().Split(" ")[1];
+            
+            if (token == null)
+                return BadRequest("token can't be null");
 
-            var command = new CreateImageCommand
+            var formCollection = await Request.ReadFormAsync();
+            var files = formCollection.Files.First();
+
+            var command = new CreateImageCommand { Token =  token };
+
+            foreach (var formFile in formCollection.Files)
             {
-                Name = newImage.Name,
-                Path = newImage.Path
-            };
+                var file = new FileDto
+                {
+                    Content = formFile.OpenReadStream(),
+                    Name = formFile.Name,
+                    ContentType = formFile.ContentType,
+                };
+                command.Files.Add(file);
+            }
 
-            var result = await _mediator.Send(command);
+            var response = await _mediator.Send(command);
 
-            var mappedResult = _mapper.Map<ImageGetDto>(result);
-            return Ok(mappedResult);
+            return Ok(response);
         }
 
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> DeleteImage(int id)
         {
-            if (id <= 0)
+            var token = Request.Headers.FirstOrDefault(x => x.Key == "Authorization").Value.ToString().Split(" ")[1];
+
+            if (token == null)
+                return BadRequest("token can't be null");
+
+            if (id < 0)
                 return BadRequest("Invalid ID");
 
             var command = new DeleteImageCommand
             {
+                Token = token,
                 ImageId = id
             };
 
-            var result = await _mediator.Send(command);
+            try
+            {
+                var result = await _mediator.Send(command);
+            } 
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-            if (result == null)
-                return NotFound();
-
-            return Ok();
+            return NoContent();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using HakunaMatata.Application.Commands;
 using HakunaMatata.Core.Abstractions;
 using HakunaMatata.Core.Models;
+using HakunaMatata.Data.Services;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,12 @@ namespace HakunaMatata.Application.CommandsHandlers
     public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyCommand, Property>
     {
         private IUnitOfWork _uow;
+        private ITokenService _tokenSerivce;
 
-        public CreatePropertyCommandHandler(IUnitOfWork uow)
+        public CreatePropertyCommandHandler(IUnitOfWork uow, ITokenService tokenSerivce)
         {
             _uow = uow;
+            _tokenSerivce = tokenSerivce;
         }
 
         public async Task<Property> Handle(CreatePropertyCommand request, CancellationToken cancellationToken)
@@ -31,6 +34,13 @@ namespace HakunaMatata.Application.CommandsHandlers
             };
 
             await _uow.PropertyRepository.AddAsync(property);
+
+            var userId = _tokenSerivce.DecodeToken(request.Token);
+
+            var user = await _uow.UserRepository.GetByIdAsync(userId);
+            user.Property = property;
+            _uow.UserRepository.Update(user);
+
             await _uow.SaveAsync();
 
             return property;

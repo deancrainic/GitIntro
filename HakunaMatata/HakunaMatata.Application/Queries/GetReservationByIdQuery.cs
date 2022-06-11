@@ -10,6 +10,7 @@ namespace HakunaMatata.Application.Queries
 {
     public class GetReservationByIdQuery : IRequest<Reservation>
     {
+        public string Token { get; set; }
         public int ReservationId { get; set; }
     }
 }

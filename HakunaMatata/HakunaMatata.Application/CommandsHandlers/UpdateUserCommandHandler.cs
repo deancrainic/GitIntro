@@ -2,6 +2,7 @@
 using HakunaMatata.Application.Exceptions;
 using HakunaMatata.Core.Abstractions;
 using HakunaMatata.Core.Models;
+using HakunaMatata.Data.Services;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,31 +15,54 @@ namespace HakunaMatata.Application.CommandsHandlers
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, User>
     {
         private IUnitOfWork _uow;
+        private ITokenService _tokenService;
 
-        public UpdateUserCommandHandler(IUnitOfWork uow)
+        public UpdateUserCommandHandler(IUnitOfWork uow, ITokenService tokenService)
         {
             _uow = uow;
+            _tokenService = tokenService;
         }
 
         public async Task<User> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            if (!_uow.UserRepository.CheckEmail(request.Email))
-                throw new InvalidEmailException("Email already exists");
+            var userId = _tokenService.DecodeToken(request.Token);
+            var user = _uow.UserRepository.GetByIdNoTracking(userId);
 
-            if (!_uow.UserRepository.CheckPassword(request.Password))
-                throw new InvalidPasswordException("Password requirements aren't met");
+            if (user == null)
+                throw new IdNotExistentException("Id not found");
 
-            if (_uow.UserRepository.GetByIdNoTracking(request.UserId) == null)
-                throw new IdNotExistentException("User ID doesn't exist");
+            if (!request.Email.Equals(user.Email))
+                if (!_uow.UserRepository.CheckEmail(request.Email))
+                    throw new InvalidEmailException("Email already exists");
 
-            var updatedUser = new User
+            User updatedUser;
+
+            if (request.Password.Equals(""))
             {
-                UserId = request.UserId,
-                Email = request.Email,
-                Password = request.Password,
-                FirstName = request.FirstName,
-                LastName = request.LastName
-            };
+                updatedUser = new User
+                {
+                    UserId = userId,
+                    Email = request.Email,
+                    Password = user.Password,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName
+                };
+            } else
+            {
+                if (!_uow.UserRepository.CheckPassword(request.Password))
+                    throw new InvalidPasswordException("Password requirements aren't met");
+
+                updatedUser = new User
+                {
+                    UserId = userId,
+                    Email = request.Email,
+                    Password = request.Password,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName
+                };
+            }
+
+            
 
             _uow.UserRepository.Update(updatedUser);
             await _uow.SaveAsync();

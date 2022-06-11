@@ -10,9 +10,10 @@ namespace HakunaMatata.Application.Commands
 {
     public class UpdateReservationCommand : IRequest<Reservation>
     {
+        public string Token { get; set; }
         public int ReservationId { get; set; }
-        public DateTime CheckinDate { get; set; }
-        public DateTime CheckoutDate { get; set; }
+        public string CheckinDate { get; set; }
+        public string CheckoutDate { get; set; }
         public int GuestsNumber { get; set; }
         public double TotalPrice { get; set; }
     }

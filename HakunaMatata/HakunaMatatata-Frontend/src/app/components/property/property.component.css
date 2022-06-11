@@ -38,6 +38,8 @@
 
 .delete-button {
     background-color: rgb(250, 83, 83);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .delete-button:hover {

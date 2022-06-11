@@ -1,9 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { IProperty } from 'src/app/models/property';
 import { IPropertyCreate } from 'src/app/models/propertyCreate';
+import { IPropertyReservation } from 'src/app/models/propertyReservation';
 import { IUser } from 'src/app/models/user';
 import { ApiService } from 'src/app/services/api.service';
+import { PropertyReservationsComponent } from '../property-reservations/property-reservations.component';
+import { ViewImagesComponent } from '../view-images/view-images.component';
 
 @Component({
   selector: 'app-property',
@@ -23,7 +28,13 @@ export class PropertyComponent implements OnInit {
   });
   message!: string;
 
-  constructor(private api: ApiService) { }
+  dialogConfig = new MatDialogConfig();
+  modalDialog!: MatDialogRef<any, any>;
+  
+  progress!: number;
+  @Output() public onUploadFinished = new EventEmitter();
+  
+  constructor(private api: ApiService, private matDialog: MatDialog) { }
 
   ngOnInit(): void {
     this.api.getCurrentUser().subscribe(x => {
@@ -51,13 +62,79 @@ export class PropertyComponent implements OnInit {
     };
 
     if (this.currentProperty == null) {
-      this.api.addProperty(createdProperty).subscribe(res => this.message = 'Successfully added', err => console.log('wrong'));
+      this.api.addProperty(createdProperty).subscribe(res => this.ngOnInit(), err => console.log('wrong'));
     } else {
-      this.api.updateProperty(createdProperty).subscribe(res => this.message = 'Successfully edited', err => console.log(err.error));
+      this.api.updateProperty(createdProperty).subscribe(res => this.ngOnInit(), err => console.log(err.error));
     }
   }
 
   deleteProperty(): void {
     this.api.deleteProperty().subscribe(res => this.ngOnInit(), err => console.log('wrong'));
+  }
+
+  uploadFile = (files: FileList | null) => {
+    if (files === null)
+      return;
+    if (files.length === 0) {
+      return;
+    }
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      let fileToUpload = <File>files.item(i);
+      formData.append('file[]', fileToUpload, fileToUpload.name);
+    }
+    
+    this.api.uploadImage(formData)
+      .subscribe({
+        next: (event: any) => {
+        if (event.type === HttpEventType.UploadProgress)
+          this.progress = Math.round(100 * event.loaded / event.total);
+        else if (event.type === HttpEventType.Response) {
+          this.message = 'Upload success.';
+          this.onUploadFinished.emit(event.body);
+        }
+      },
+      error: (err: HttpErrorResponse) => console.log(err)
+    });
+  }
+
+  openImagesModal() {
+    this.api.getCurrentUser().subscribe(x => {
+      this.currentProperty = x.property;
+      this.dialogConfig.id = "projects-modal-component";
+      this.dialogConfig.height = "80%"
+      this.dialogConfig.width = "80%";
+      this.modalDialog = this.matDialog.open(ViewImagesComponent, this.dialogConfig);
+      this.modalDialog.componentInstance.property = <IProperty>this.currentProperty;
+      this.modalDialog.afterClosed().subscribe(res => this.ngOnInit());
+    });
+  }
+
+  openReservationsModal() {
+    this.api.getCurrentUser().subscribe(x => {
+      this.currentProperty = x.property;
+      if (this.currentProperty != null) {
+        this.api.getReservationsByPropertyId(this.currentProperty.propertyId).subscribe(
+          res => {
+            this.dialogConfig.id = "projects-modal-component";
+            this.dialogConfig.height = "80%"
+            this.dialogConfig.width = "80%";
+            this.modalDialog = this.matDialog.open(PropertyReservationsComponent, this.dialogConfig);
+            this.modalDialog.componentInstance.reservations = <IPropertyReservation[]>res;
+            this.modalDialog.componentInstance.propertyId = this.currentProperty?.propertyId;
+            this.modalDialog.afterClosed().subscribe(res => this.ngOnInit());
+          }
+        )
+      }
+    });
+  }
+
+  viewReservation(): void {
+    this.openReservationsModal();
+  }
+
+  viewImages(): void {
+    this.openImagesModal();
   }
 }

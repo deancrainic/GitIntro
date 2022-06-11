@@ -4,16 +4,18 @@
             <mat-card-content class="property-address">{{property.address}}</mat-card-content>
 
             <mat-card-content>
-                <div class="img-gallery">
-                    <div class="left-side-gallery">
-                        <img src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-48509375/original/b1726498-95c5-47dd-829a-f23e8aacd93a.jpeg?im_w=1440" alt="">
-                    </div>
-
-                    <div class="right-side-gallery">
-                        <img class="top-img" src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-48509375/original/b1726498-95c5-47dd-829a-f23e8aacd93a.jpeg?im_w=1440" alt="">
-                        <img class="bot-img" src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-48509375/original/0862735b-4abc-4d87-a8d1-f2fb6053adc8.jpeg?im_w=1200" alt="">
-                    </div>
+                <div class="image" (click)="viewImages()">
+                    <img 
+                        *ngIf="property.images.length > 0" 
+                        [src]="property.images[0].path"
+                        class="property-image">
+                    <img 
+                        *ngIf="property.images.length === 0" 
+                        src="https://hakunamatataupload.blob.core.windows.net/hakunamatatauploads/venue-card-placeholder.png"
+                        class="property-image">
                 </div>
+                                
+                <button mat-button class="images-button" (click)="viewImages()">View images</button>
             </mat-card-content>
             <mat-card-content class="property-guests">Maximum {{property.maxGuests}} people</mat-card-content>
             <mat-card-content class="property-description">{{property.description}}</mat-card-content>
@@ -44,7 +46,7 @@
                         </span>
             
                         <span>
-                            <button [disabled]="!this.reservationForm.valid" mat-button type="submit">Reserve</button>
+                            <button class="reserve-button" [disabled]="!this.reservationForm.valid" mat-button type="submit">Reserve</button>
                         </span>
 
                         <div class="error">

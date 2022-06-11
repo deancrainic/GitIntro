@@ -10,6 +10,8 @@ import { ReservationDetailsTrasporterService } from '../../services/reservation-
 import { DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { DateRange } from 'src/app/models/dateRange';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { ViewImagesComponent } from '../view-images/view-images.component';
 
 @Component({
   selector: 'app-property-details',
@@ -44,13 +46,17 @@ export class PropertyDetailsComponent implements OnInit {
   unavailableDays!: DateRange[];
   availableDays!:any;
 
+  dialogConfig = new MatDialogConfig();
+  modalDialog!: MatDialogRef<ViewImagesComponent, any>;
+
   constructor(
     private api: ApiService, 
     private activeRoute: ActivatedRoute, 
     private router: Router, 
     private transporter: ReservationDetailsTrasporterService, 
     private acc: AccountService,
-    private date: DatePipe) { }
+    private date: DatePipe,
+    private matDialog: MatDialog) { }
 
   formatDate(d: Date): Date {
     let dateString = d.toString();
@@ -68,17 +74,22 @@ export class PropertyDetailsComponent implements OnInit {
         this.unavailableDays = x;
         this.availableDays = (d: Date): boolean => {
           let valid = true;
-          this.unavailableDays.forEach(dr => {
-            let currentDate = new Date();
-            currentDate.setDate(currentDate.getDate() - 1);
-            if (this.formatDate(d) < this.formatDate(currentDate)) {
-              valid = false;
-            } else {
-              if (this.formatDate(d) >= this.formatDate(new Date(dr.checkinDate)) && this.formatDate(d) < this.formatDate(new Date(dr.checkoutDate)))
+
+          let currentDate = new Date();
+          currentDate.setDate(currentDate.getDate() - 1);
+
+          if (this.formatDate(d) < this.formatDate(currentDate)) {
+            valid = false;
+          }
+
+          if (this.unavailableDays.length > 0) {
+            this.unavailableDays.forEach(dr => {
+              if (this.formatDate(d) >= this.formatDate(new Date(dr.checkinDate)) && 
+                  this.formatDate(d) < this.formatDate(new Date(dr.checkoutDate))) {
                 valid = false;
-            }
-          });
-      
+              }
+            });
+          }
           return valid;
         };
       });
@@ -130,5 +141,20 @@ export class PropertyDetailsComponent implements OnInit {
     } else {
       this.router.navigate(['login']);
     }
+  }
+
+  openImagesModal() {
+    this.property.subscribe(res => {
+      this.dialogConfig.id = "projects-modal-component";
+      this.dialogConfig.height = "80%"
+      this.dialogConfig.width = "80%";
+      this.modalDialog = this.matDialog.open(ViewImagesComponent, this.dialogConfig);
+      this.modalDialog.componentInstance.property = res;
+      this.modalDialog.afterClosed().subscribe(res => this.ngOnInit()); 
+    });
+  }
+
+  viewImages(): void {
+    this.openImagesModal();
   }
 }

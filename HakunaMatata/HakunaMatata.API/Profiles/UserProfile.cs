@@ -13,7 +13,6 @@ namespace HakunaMatata.API.Profiles
                 .ForMember(u => u.Email, opt => opt.MapFrom(s => s.Email))
                 .ForMember(u => u.FirstName, opt => opt.MapFrom(s => s.FirstName))
                 .ForMember(u => u.LastName, opt => opt.MapFrom(s => s.LastName))
-                //.ForMember(u => u.Property, opt => opt.MapFrom(s => s.Property))
                 .ForMember(u => u.Reservations, opt => opt.MapFrom(s => s.Reservations));
 
             CreateMap<UserCreateDto, User>()

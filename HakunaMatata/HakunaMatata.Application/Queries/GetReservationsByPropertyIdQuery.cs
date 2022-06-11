@@ -1,4 +1,5 @@
 ﻿using HakunaMatata.Core.Models;
+using HakunaMatata.Data.DTOs;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -6,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HakunaMatata.Application.Commands
+namespace HakunaMatata.Application.Queries
 {
-    public class AddPropertyToUserCommand : IRequest<User>
+    public class GetReservationsByPropertyIdQuery : IRequest<IEnumerable<ReservationGetForPropertyDto>>
     {
-        public int UserId { get; set; }
+        public string Token { get; set; }
         public int PropertyId { get; set; }
     }
 }

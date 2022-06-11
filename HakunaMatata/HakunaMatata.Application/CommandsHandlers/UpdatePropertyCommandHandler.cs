@@ -2,6 +2,7 @@
 using HakunaMatata.Application.Exceptions;
 using HakunaMatata.Core.Abstractions;
 using HakunaMatata.Core.Models;
+using HakunaMatata.Data.Services;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,23 +15,27 @@ namespace HakunaMatata.Application.CommandsHandlers
     public class UpdatePropertyCommandHandler : IRequestHandler<UpdatePropertyCommand, Property>
     {
         private IUnitOfWork _uow;
+        private ITokenService _tokenService;
 
-        public UpdatePropertyCommandHandler(IUnitOfWork uow)
+        public UpdatePropertyCommandHandler(IUnitOfWork uow, ITokenService tokenService)
         {
             _uow = uow;
+            _tokenService = tokenService;
         }
 
         public async Task<Property> Handle(UpdatePropertyCommand request, CancellationToken cancellationToken)
         {
-            var updatedProperty = _uow.PropertyRepository.GetByIdNoTracking(request.PropertyId);
-            if (updatedProperty == null)
-                throw new IdNotExistentException("Property ID doesn't exist");
+            var userId = _tokenService.DecodeToken(request.Token);
 
+            var user = _uow.UserRepository.GetByIdNoTracking(userId);
+            var property = user.Property;
 
+            if (property == null)
+                throw new UserDoesNotHaveProperty("User doesn't have a property assigned");
 
-            updatedProperty = new Property
+            var updatedProperty = new Property
             {
-                PropertyId = request.PropertyId,
+                PropertyId = property.PropertyId,
                 Name = request.Name,
                 Description = request.Description,
                 Address = request.Address,

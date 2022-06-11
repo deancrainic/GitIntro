@@ -10,6 +10,6 @@ namespace HakunaMatata.Application.Commands
 {
     public class DeletePropertyCommand : IRequest<Property>
     {
-        public int PropertyId { get; set; }
+        public string Token { get; set; }
     }
 }

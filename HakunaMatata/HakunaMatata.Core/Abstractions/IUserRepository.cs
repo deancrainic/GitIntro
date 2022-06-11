@@ -16,5 +16,9 @@ namespace HakunaMatata.Core.Abstractions
         User GetByIdNoTracking(int id);
         bool CheckEmail(string email);
         bool CheckPassword(string password);
+        User GetByEmail(string email);
+        bool VerifyPassword(string email, string password);
+        Task<bool> PropertyIsAssignedAsync(int propertyId);
+        Task<User> GetUserByReservationAsync(int id);
     }
 }

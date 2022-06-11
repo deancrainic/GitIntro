@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace HakunaMatata.Application.Queries
 {
-    public class GetUserByIdQuery : IRequest<User>
+    public class GetCurrentUserQuery : IRequest<User>
     {
-        public int UserId { get; set; }
+        public string Token { get; set; }
     }
 }

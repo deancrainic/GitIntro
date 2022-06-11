@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { SearchFormComponent } from './components/search-form/search-form.component';
-import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -25,6 +25,8 @@ import { PropertyComponent } from './components/property/property.component';
 import { ReservationsComponent } from './components/reservations/reservations.component';
 import { EditReservationComponent } from './components/edit-reservation/edit-reservation.component';
 import { CustomValidators } from './validators/validators';
+import { ViewImagesComponent } from './components/view-images/view-images.component';
+import { PropertyReservationsComponent } from './components/property-reservations/property-reservations.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { CustomValidators } from './validators/validators';
     EditProfileComponent,
     PropertyComponent,
     ReservationsComponent,
-    EditReservationComponent
+    EditReservationComponent,
+    ViewImagesComponent,
+    PropertyReservationsComponent
   ],
   imports: [
     BrowserModule,

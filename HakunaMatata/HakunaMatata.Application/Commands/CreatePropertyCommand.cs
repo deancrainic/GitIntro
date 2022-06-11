@@ -10,6 +10,7 @@ namespace HakunaMatata.Application.Commands
 {
     public class CreatePropertyCommand : IRequest<Property>
     {
+        public string Token { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Address { get; set; }

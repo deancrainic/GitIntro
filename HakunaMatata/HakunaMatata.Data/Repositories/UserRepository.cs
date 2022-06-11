@@ -15,24 +15,24 @@ namespace HakunaMatata.Data.Repositories
         public UserRepository(HakunaMatataContext ctx) : base(ctx) { }
         public async override Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _dbSet.Include(u => u.Property).Include(u => u.Reservations).ToListAsync();
+            return await _dbSet.Include(u => u.Property).ThenInclude(p => p.Images).Include(u => u.Reservations).ThenInclude(r => r.Property).ToListAsync();
         }
 
         public override IEnumerable<User> GetAll()
         {
-            return _dbSet.Include(u => u.Property).Include(u => u.Reservations).ToList();
+            return _dbSet.Include(u => u.Property).ThenInclude(p => p.Images).Include(u => u.Reservations).ThenInclude(r => r.Property).ToList();
         }
 
         public async override Task<User> GetByIdAsync(int id)
         {
-            var user = await _dbSet.Include(u => u.Property).Include(u => u.Reservations).SingleOrDefaultAsync(u => u.UserId == id);
+            var user = await _dbSet.Include(u => u.Property).ThenInclude(p => p.Images).Include(u => u.Reservations).ThenInclude(r => r.Property).SingleOrDefaultAsync(u => u.UserId == id);
 
             return user;
         }
 
         public override User GetById(int id)
         {
-            var user = _dbSet.Include(u => u.Property).Include(u => u.Reservations).SingleOrDefault(u => u.UserId == id);
+            var user = _dbSet.Include(u => u.Property).ThenInclude(p => p.Images).Include(u => u.Reservations).ThenInclude(r => r.Property).SingleOrDefault(u => u.UserId == id);
 
             return user;
         }
@@ -58,9 +58,50 @@ namespace HakunaMatata.Data.Repositories
 
         public User GetByIdNoTracking(int id)
         {
-            var user = _dbSet.AsNoTracking().Include(u => u.Property).Include(u => u.Reservations).SingleOrDefault(u => u.UserId == id);
+            var user = _dbSet.AsNoTracking().Include(u => u.Property).ThenInclude(p => p.Images).Include(u => u.Reservations).ThenInclude(r => r.Property).SingleOrDefault(u => u.UserId == id);
 
             return user;
+        }
+
+        public User GetByEmail(string email)
+        {
+            var user = _dbSet.Include(u => u.Property).ThenInclude(p => p.Images).Include(u => u.Reservations).ThenInclude(r => r.Property).SingleOrDefault(u => u.Email.Equals(email));
+
+            return user;
+        }
+
+        async public Task<bool> PropertyIsAssignedAsync(int propertyId)
+        {
+            if (await _dbSet.Include(u => u.Property).ThenInclude(p => p.Images).Include(u => u.Reservations).ThenInclude(r => r.Property).AnyAsync(u => u.Property.PropertyId == propertyId))
+                return true;
+
+            return false;
+        }
+
+        public bool VerifyPassword(string email, string password)
+        {
+            var user = _dbSet.Include(u => u.Property).ThenInclude(p => p.Images).Include(u => u.Reservations).ThenInclude(r => r.Property).SingleOrDefault(u => u.Email.Equals(email));
+
+            if (user != null && user.Password.Equals(password))
+                return true;
+
+            return false;
+        }
+
+        public async Task<User> GetUserByReservationAsync(int id)
+        {
+            var users = await _dbSet.ToListAsync();
+
+            foreach (var user in users)
+            {
+                foreach (var res in user.Reservations)
+                {
+                    if (res.ReservationId == id)
+                        return user;
+                }
+            }
+
+            return null;
         }
     }
 }

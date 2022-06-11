@@ -10,6 +10,6 @@ namespace HakunaMatata.Application.Commands
 {
     public class DeleteUserCommand : IRequest<User>
     {
-        public int UserId { get; set; }
+        public string Token { get; set; }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace HakunaMatata.API.Dto
 {
-    public class ImageCreateDto
+    public class UserCredentialsDto
     {
         [Required]
-        public string Name { get; set; }
+        public string Email { get; set; }
         [Required]
-        public string Path { get; set; }
+        public string Password { get; set; }
     }
 }

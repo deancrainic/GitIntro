@@ -33,4 +33,23 @@
         </div>
     </form>
     <button *ngIf="this.currentProperty != null" mat-button class="delete-button" (click)="deleteProperty()">Delete property</button>
-</div>
+
+    <div *ngIf="this.currentProperty != null">
+        <div style="width: 25%; display: flex; justify-content: space-between; padding-bottom: 1rem;">
+            <button mat-button class="action-button" (click)="viewReservation()">View reservations</button>
+            <button mat-button class="action-button" (click)="viewImages()">View images</button>
+        </div>
+        <div>
+            <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;" multiple>
+            <button type="button" mat-button (click)="file.click()">Upload Images</button>
+          </div>
+          <div>
+            <span *ngIf="progress > 0">
+              {{progress}}%
+            </span>
+            <span *ngIf="message">
+              {{message}}
+            </span>
+          </div>
+    </div>
+</div> 

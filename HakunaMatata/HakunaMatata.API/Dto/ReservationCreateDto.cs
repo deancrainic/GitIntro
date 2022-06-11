@@ -8,9 +8,9 @@ namespace HakunaMatata.API.Dto
         [Required]
         public int PropertyId { get; set; }
         [Required]
-        public DateTime CheckinDate { get; set; }
+        public string CheckinDate { get; set; }
         [Required]
-        public DateTime CheckoutDate { get; set; }
+        public string CheckoutDate { get; set; }
         [Required]
         public int GuestsNumber { get; set; }
         [Required]

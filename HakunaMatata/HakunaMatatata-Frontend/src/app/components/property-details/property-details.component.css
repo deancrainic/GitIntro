@@ -15,57 +15,16 @@
     flex-direction: column;
 }
 
-.property-img {
-    max-width: 100%;
-    max-height: 100%;
-}
-
-.img-gallery {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    width: 100%;
-    height: 30rem;
-}
-
-.left-side-gallery {
-    width: 60%;
-    padding-right: 1rem;
-    height: 100%;
+.image {
     display: flex;
     justify-content: center;
-    border-right: 1px solid white;
-    background-color: #e4e4e4;
+    padding-bottom: 2rem;
+    cursor: pointer;
 }
 
-.left-side-gallery img {
-    height: 100%;
+.property-image {
     max-width: 100%;
-}
-
-.right-side-gallery {
-    width: 39%;
-    padding-left: 1rem;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-left: 1px solid white;
-    background-color: #e4e4e4;
-}
-
-.right-side-gallery img {
-    height: 49%;
-    max-width: 100%;
-    align-self: center;
-}
-
-.top-img {
-    padding-bottom: 0.3rem;
-}
-
-.bot-img {
-    padding-top: 0.3rem;
+    max-height: 30rem;
 }
 
 .reservation-form {
@@ -88,8 +47,12 @@
 .mat-button:hover:enabled {
     transition: .08s ease-in;
     background-color: #85aaad;
-    border: 2px solid black !important;
+    border: 1px solid black !important;
     color: white;
+}
+
+.reserve-button:hover:enabled {
+    border: 2px solid black !important;
 }
 
 mat-card-content {

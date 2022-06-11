@@ -16,11 +16,6 @@
     font-size: 1.1rem;
 }
 
-.buttons {
-    /* display: flex;
-    justify-content: flex-end; */
-}
-
 .buttons mat-icon {
     cursor: pointer;
     color: gray;

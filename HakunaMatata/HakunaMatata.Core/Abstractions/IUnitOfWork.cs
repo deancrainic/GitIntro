@@ -12,7 +12,6 @@ namespace HakunaMatata.Core.Abstractions
         IPropertyRepository PropertyRepository { get; }
         IReservationRepository ReservationRepository { get; }
         IImageRepository ImageRepository { get; }
-
         Task SaveAsync();
     }
 }

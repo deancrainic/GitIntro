@@ -1,3 +1,5 @@
+import { IImage } from "./image";
+
 export interface IProperty {
     propertyId: number,
     name: string,
@@ -5,5 +7,5 @@ export interface IProperty {
     address: string,
     maxGuests: number,
     price: number,
-    images: string[]
+    images: IImage[]
 }

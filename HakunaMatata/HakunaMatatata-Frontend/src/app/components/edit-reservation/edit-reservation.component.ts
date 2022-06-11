@@ -62,22 +62,25 @@ export class EditReservationComponent implements OnInit {
         this.unavailableDays = x;
         this.availableDays = (d: Date): boolean => {
           let valid = true;
-          this.unavailableDays.forEach(dr => {
-            let currentDate = new Date();
-            currentDate.setDate(currentDate.getDate() - 1);
-            
-            if (this.formatDate(d) < this.formatDate(currentDate)) {
-              valid = false;
-            } else {
+
+          let currentDate = new Date();
+          currentDate.setDate(currentDate.getDate() - 1);
+
+          if (this.formatDate(d) < this.formatDate(currentDate)) {
+            valid = false;
+          }
+
+          if (this.unavailableDays.length > 0) {
+            this.unavailableDays.forEach(dr => {
               if (this.formatDate(d) >= this.formatDate(new Date(dr.checkinDate)) && 
                   this.formatDate(d) < this.formatDate(new Date(dr.checkoutDate)) && 
                   (this.formatDate(d) < this.formatDate(this.reservation.checkinDate) ||
                   this.formatDate(d) >= this.formatDate(this.reservation.checkoutDate))) {
                 valid = false;
               }
-            }
-          });
-      
+            });
+          }
+          
           return valid;
         };
       });

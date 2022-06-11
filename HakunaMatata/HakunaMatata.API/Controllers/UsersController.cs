@@ -5,12 +5,14 @@ using HakunaMatata.Application.Exceptions;
 using HakunaMatata.Application.Queries;
 using HakunaMatata.Core.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HakunaMatata.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -23,34 +25,27 @@ namespace HakunaMatata.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        [Route("current")]
+        public async Task<IActionResult> GetCurrentUser()
         {
-            var query = new GetAllUsersQuery();
+            var token = Request.Headers.FirstOrDefault(x => x.Key == "Authorization").Value.ToString().Split(" ")[1];
+            
+            if (token == null)
+                return BadRequest("token can't be null");
 
-            var result = await _mediator.Send(query);
+            var query = new GetCurrentUserQuery { Token = token };
 
-            var mappedResult = _mapper.Map<List<UserGetDto>>(result);
-            return Ok(mappedResult);
-        }
-
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetUserById(int id)
-        {
-            if (id <= 0)
-                return BadRequest("Invalid ID");
-
-            var query = new GetUserByIdQuery { UserId = id };
             var result = await _mediator.Send(query);
 
             if (result == null)
-                return NotFound();
-
+                return NotFound("User doesn't exist");
+            
             var mappedResult = _mapper.Map<UserGetDto>(result);
             return Ok(mappedResult);
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateUser(UserCreateDto newUser)
         {
             if (newUser == null)
@@ -82,13 +77,15 @@ namespace HakunaMatata.API.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        [Route("current")]
+        public async Task<IActionResult> DeleteUser()
         {
-            if (id <= 0)
-                return BadRequest("Invalid ID");
+            var token = Request.Headers.FirstOrDefault(x => x.Key == "Authorization").Value.ToString().Split(" ")[1];
 
-            var command = new DeleteUserCommand { UserId = id };
+            if (token == null)
+                return BadRequest("token can't be null");
+
+            var command = new DeleteUserCommand { Token = token };
 
             var result = await _mediator.Send(command);
 
@@ -99,18 +96,20 @@ namespace HakunaMatata.API.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UserCreateDto user)
+        [Route("current")]
+        public async Task<IActionResult> UpdateUser(UserUpdateDto user)
         {
-            if (id <= 0)
-                return BadRequest("Invalid ID");
+            var token = Request.Headers.FirstOrDefault(x => x.Key == "Authorization").Value.ToString().Split(" ")[1];
+
+            if (token == null)
+                return BadRequest("token can't be null");
 
             if (user == null)
                 return BadRequest("User can't be null");
 
             var command = new UpdateUserCommand
             {
-                UserId = id,
+                Token = token,
                 Email = user.Email,
                 Password = user.Password,
                 FirstName = user.FirstName,
@@ -138,55 +137,25 @@ namespace HakunaMatata.API.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("{userId}/Property/{propertyId}")]
-        public async Task<IActionResult> AddPropertyToUser(int userId, int propertyId)
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<ActionResult<string>> Login(UserCredentialsDto creds)
         {
-            if (userId <= 0 || propertyId <= 0)
-                return BadRequest("Invalid ID");
-
-            var command = new AddPropertyToUserCommand
+            var command = new LoginCommand
             {
-                UserId = userId,
-                PropertyId = propertyId
+                Email = creds.Email,
+                Password = creds.Password
             };
 
             try
             {
                 var result = await _mediator.Send(command);
 
-                var mappedResult = _mapper.Map<UserGetDto>(result);
-                return Ok(mappedResult);
+                return new JsonResult(result);
             } 
-            catch (IdNotExistentException ex)
+            catch (UserDoesNotExistException ex)
             {
-                return NotFound(ex.Message);
-            }
-        }
-
-        [HttpPost]
-        [Route("{userId}/reservations/{reservationId}")]
-        public async Task<IActionResult> AddReservationToUser(int userId, int reservationId)
-        {
-            if (userId <= 0 || reservationId <= 0)
-                return BadRequest("Invalid ID");
-
-            var command = new AddReservationToUserCommand
-            {
-                UserId = userId,
-                ReservationId = reservationId
-            };
-
-            try
-            {
-                var result = await _mediator.Send(command);
-
-                var mappedResult = _mapper.Map<UserGetDto>(result);
-                return Ok(mappedResult);
-            }
-            catch (IdNotExistentException ex)
-            {
-                return NotFound(ex.Message);
+                return Unauthorized(ex.Message);
             }
         }
     }

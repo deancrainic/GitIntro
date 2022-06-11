@@ -42,9 +42,12 @@ namespace HakunaMatata.Data.Repositories
             if (_dbSet
                 .Where(r => r.Property.PropertyId == propertyId)
                 .Any(r =>
-                (checkin < r.CheckoutDate && checkin > r.CheckinDate) ||
-                (checkout > r.CheckinDate && checkout < r.CheckoutDate) ||
-                (checkin < r.CheckinDate && checkout > r.CheckoutDate)))
+                (checkin < r.CheckoutDate && checkin >= r.CheckinDate) ||
+                (checkout > r.CheckinDate && checkout <= r.CheckoutDate) ||
+                (checkin <= r.CheckinDate && checkout >= r.CheckoutDate)))
+                return false;
+
+            if (checkin == checkout)
                 return false;
 
             return true;
@@ -55,9 +58,12 @@ namespace HakunaMatata.Data.Repositories
             if (_dbSet
                 .Where(r => r.Property.PropertyId == propertyId && r.ReservationId != reservationId)
                 .Any(r =>
-                (checkin < r.CheckoutDate && checkin > r.CheckinDate) ||
-                (checkout > r.CheckinDate && checkout < r.CheckoutDate) ||
-                (checkin < r.CheckinDate && checkout > r.CheckoutDate)))
+                (checkin < r.CheckoutDate && checkin >= r.CheckinDate) ||
+                (checkout > r.CheckinDate && checkout <= r.CheckoutDate) ||
+                (checkin <= r.CheckinDate && checkout >= r.CheckoutDate)))
+                return false;
+
+            if (checkin == checkout)
                 return false;
 
             return true;
@@ -68,6 +74,13 @@ namespace HakunaMatata.Data.Repositories
             var reservation = _dbSet.AsNoTracking().Include(r => r.Property).SingleOrDefault(u => u.ReservationId == id);
 
             return reservation;
+        }
+
+        public async Task<IEnumerable<Reservation>> GetByPropertyId(int id)
+        {
+            var reservations = _dbSet.Include(r => r.Property).Where(r => r.Property.PropertyId == id && r.CheckinDate >= DateTime.UtcNow).ToListAsync();
+
+            return await reservations;
         }
     }
 }

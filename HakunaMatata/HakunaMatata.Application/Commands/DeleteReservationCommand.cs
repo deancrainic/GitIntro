@@ -10,6 +10,7 @@ namespace HakunaMatata.Application.Commands
 {
     public class DeleteReservationCommand : IRequest<Reservation>
     {
+        public string Token { get; set; }
         public int ReservationId { get; set; }
     }
 }
