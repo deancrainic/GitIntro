@@ -3,11 +3,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router'
+import { Methods } from 'src/app/methods/methods';
 import { DateRange } from 'src/app/models/dateRange';
 import { IReservation } from 'src/app/models/reservation';
 import { IReservationProperty } from 'src/app/models/reservationProperty';
 import { IReservationUpdate } from 'src/app/models/reservationUpdate';
 import { ApiService } from 'src/app/services/api.service';
+import { CustomValidators } from 'src/app/validators/validators';
 
 @Component({
   selector: 'app-edit-reservation',
@@ -28,10 +30,7 @@ export class EditReservationComponent implements OnInit {
     end: new FormControl('', [Validators.required]),
   });
 
-  reservationForm = new FormGroup({
-    range: this.range,
-    guests: new FormControl('', [Validators.required])
-  });
+  reservationForm!: FormGroup;
 
   unavailableDays!: DateRange[];
   availableDays!:any;
@@ -44,15 +43,16 @@ export class EditReservationComponent implements OnInit {
   ) { }
 
   formatDate(d: Date): Date {
-    let dateString = d.toString();
-    let dateFormatted = new Date(dateString + 'Z');
-    
-    return dateFormatted;
+    return Methods.formatDate(d);
   }
 
   ngOnInit(): void {
     this.api.getReservationById(this.reservationId).subscribe(res => {
       this.reservation = res,
+      this.reservationForm = new FormGroup({
+        range: this.range,
+        guests: new FormControl('', [Validators.required, CustomValidators.guestsNumber(res.property.maxGuests)])
+      });
       this.range.controls['start'].setValue(this.formatDate(res.checkinDate));
       this.range.controls['end'].setValue(this.formatDate(res.checkoutDate));
       this.reservationForm.controls['guests'].setValue(res.guestsNumber);

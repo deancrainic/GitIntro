@@ -12,6 +12,8 @@ import { Observable } from 'rxjs';
 import { DateRange } from 'src/app/models/dateRange';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { ViewImagesComponent } from '../view-images/view-images.component';
+import { CustomValidators } from 'src/app/validators/validators';
+import { Methods } from 'src/app/methods/methods';
 
 @Component({
   selector: 'app-property-details',
@@ -32,10 +34,7 @@ export class PropertyDetailsComponent implements OnInit {
     end: new FormControl(this.endDate, [Validators.required]),
   });
 
-  reservationForm = new FormGroup({
-    range: this.range,
-    guests: new FormControl(this.guests, [Validators.required])
-  });
+  reservationForm!: FormGroup;
 
   subscription1!: Subscription;
   subscription2!: Subscription;
@@ -58,18 +57,15 @@ export class PropertyDetailsComponent implements OnInit {
     private date: DatePipe,
     private matDialog: MatDialog) { }
 
-  formatDate(d: Date): Date {
-    let dateString = d.toString();
-    let dateFormatted = new Date(dateString + 'Z');
-    
-    return dateFormatted;
-  }
-
   ngOnInit(): void {
     this.activeRoute.params.subscribe(params => this.propertyId = params['id']);
     this.property = this.api.getPropertyById(this.propertyId);
     
     this.property.subscribe(res => {
+      this.reservationForm = new FormGroup({
+        range: this.range,
+        guests: new FormControl(this.guests, [Validators.required, CustomValidators.guestsNumber(res.maxGuests)])
+      });
       this.api.getReservationDatesByPropertyId(res.propertyId).subscribe(x => {
         this.unavailableDays = x;
         this.availableDays = (d: Date): boolean => {
@@ -78,14 +74,14 @@ export class PropertyDetailsComponent implements OnInit {
           let currentDate = new Date();
           currentDate.setDate(currentDate.getDate() - 1);
 
-          if (this.formatDate(d) < this.formatDate(currentDate)) {
+          if (Methods.formatDate(d) < Methods.formatDate(currentDate)) {
             valid = false;
           }
 
           if (this.unavailableDays.length > 0) {
             this.unavailableDays.forEach(dr => {
-              if (this.formatDate(d) >= this.formatDate(new Date(dr.checkinDate)) && 
-                  this.formatDate(d) < this.formatDate(new Date(dr.checkoutDate))) {
+              if (Methods.formatDate(d) >= Methods.formatDate(new Date(dr.checkinDate)) && 
+                  Methods.formatDate(d) < Methods.formatDate(new Date(dr.checkoutDate))) {
                 valid = false;
               }
             });

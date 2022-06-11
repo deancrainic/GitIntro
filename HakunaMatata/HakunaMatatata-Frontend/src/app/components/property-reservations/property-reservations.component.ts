@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Methods } from 'src/app/methods/methods';
 import { IPropertyReservation } from 'src/app/models/propertyReservation';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -26,14 +27,11 @@ export class PropertyReservationsComponent implements OnInit {
   }
 
   formatDate(d: Date): Date {
-    let dateString = d.toString();
-    let dateFormatted = new Date(dateString + 'Z');
-    
-    return dateFormatted;
+    return Methods.formatDate(d);
   }
 
   checkDate(d: Date): boolean {
-    return (this.formatDate(d) < this.formatDate(new Date()));
+    return (Methods.formatDate(d) < Methods.formatDate(new Date()));
   }
 
   delete(reservationId: number): void {

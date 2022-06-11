@@ -1,6 +1,6 @@
 <div class="container">
     <div class="close"><mat-icon class="closeButton" (click)="closeModal()">close</mat-icon></div>
-        <form [formGroup]="this.reservationForm" (ngSubmit)="updateReservation()">
+        <form *ngIf="this.reservationForm" [formGroup]="this.reservationForm" (ngSubmit)="updateReservation()">
             <span>
                 <mat-form-field appearance="outline" color="primary">
                     <mat-label>Enter a date range *</mat-label>
@@ -26,7 +26,7 @@
         </form>
 
         <div class="error">
-            <p>{{this.reserveErrorMessage}}</p>
+            <p>{{this.reservationForm.get('guests')?.errors?.['invalidGuestsNumber'] ? 'Invalid guests number' : this.reserveErrorMessage}}</p>
         </div>
         
         <div>

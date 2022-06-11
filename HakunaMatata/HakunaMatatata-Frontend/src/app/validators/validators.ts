@@ -43,4 +43,16 @@ export class CustomValidators {
           }
         };
       }
+
+      static guestsNumber(guestsNumber: number): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+          const value = control.value;
+
+          if (!value) {
+            return null;
+          }
+
+          return (value <= guestsNumber && value >= 1) ? null : { invalidGuestsNumber: true };
+        }
+      }
 }

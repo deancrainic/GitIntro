@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { Methods } from 'src/app/methods/methods';
 import { IReservation } from 'src/app/models/reservation';
 import { ApiService } from 'src/app/services/api.service';
 import { EditReservationComponent } from '../edit-reservation/edit-reservation.component';
@@ -45,14 +46,11 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
   }
 
   formatDate(d: Date): Date {
-    let dateString = d.toString();
-    let dateFormatted = new Date(dateString + 'Z');
-    
-    return dateFormatted;
+    return Methods.formatDate(d);
   }
 
   checkDate(d: Date): boolean {
-    return (this.formatDate(d) < this.formatDate(this.currentDate))
+    return (Methods.formatDate(d) < Methods.formatDate(this.currentDate))
   }
 
   delete(reservationId: number): void {
