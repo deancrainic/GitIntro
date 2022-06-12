@@ -72,8 +72,12 @@ export class EditReservationComponent implements OnInit {
 
           if (this.unavailableDays.length > 0) {
             this.unavailableDays.forEach(dr => {
-              if (this.formatDate(d) >= this.formatDate(new Date(dr.checkinDate)) && 
-                  this.formatDate(d) < this.formatDate(new Date(dr.checkoutDate)) && 
+              let checkin = new Date(dr.checkinDate);
+              checkin.setDate(checkin.getDate() + 1);
+              let checkout = new Date(dr.checkoutDate);
+              checkout.setDate(checkout.getDate() + 1);
+              if (this.formatDate(d) > this.formatDate(checkin) && 
+                  this.formatDate(d) < this.formatDate(checkout) && 
                   (this.formatDate(d) < this.formatDate(this.reservation.checkinDate) ||
                   this.formatDate(d) >= this.formatDate(this.reservation.checkoutDate))) {
                 valid = false;
@@ -102,8 +106,7 @@ export class EditReservationComponent implements OnInit {
     let res: IReservationUpdate = {
       checkinDate: this.date.transform(this.reservationForm.get('range.start')?.value, 'yyyy-MM-dd'),
       checkoutDate: this.date.transform(this.reservationForm.get('range.end')?.value, 'yyyy-MM-dd'),
-      guestsNumber: this.reservationForm.get('guests')?.value,
-      totalPrice: this.getTotalPrice(this.reservation.property.price),
+      guestsNumber: this.reservationForm.get('guests')?.value
     }
 
     this.api.updateReservation(this.reservation.reservationId, res).subscribe(res => this.closeModal(), err => this.reserveErrorMessage = err.error);

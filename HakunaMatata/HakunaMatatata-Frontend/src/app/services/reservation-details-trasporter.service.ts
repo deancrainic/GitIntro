@@ -8,7 +8,7 @@ export class ReservationDetailsTrasporterService {
 
   startDateSource = new BehaviorSubject(new Date());
   endDateSource = new BehaviorSubject(new Date());
-  guestsSource = new BehaviorSubject(0);
+  guestsSource = new BehaviorSubject(1);
 
   currentStartDate = this.startDateSource.asObservable();
   currentEndDate = this.endDateSource.asObservable();

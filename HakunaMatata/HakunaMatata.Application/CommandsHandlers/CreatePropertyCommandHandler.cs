@@ -24,6 +24,10 @@ namespace HakunaMatata.Application.CommandsHandlers
 
         public async Task<Property> Handle(CreatePropertyCommand request, CancellationToken cancellationToken)
         {
+            var userId = _tokenSerivce.DecodeToken(request.Token);
+
+            var user = await _uow.UserRepository.GetByIdAsync(userId);
+
             var property = new Property
             {
                 Name = request.Name,
@@ -35,9 +39,7 @@ namespace HakunaMatata.Application.CommandsHandlers
 
             await _uow.PropertyRepository.AddAsync(property);
 
-            var userId = _tokenSerivce.DecodeToken(request.Token);
-
-            var user = await _uow.UserRepository.GetByIdAsync(userId);
+            
             user.Property = property;
             _uow.UserRepository.Update(user);
 

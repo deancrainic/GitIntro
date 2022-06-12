@@ -140,8 +140,7 @@ namespace HakunaMatata.API.Controllers
                 PropertyId = newReservation.PropertyId,
                 CheckinDate = newReservation.CheckinDate,
                 CheckoutDate = newReservation.CheckoutDate,
-                GuestsNumber = newReservation.GuestsNumber,
-                TotalPrice = newReservation.TotalPrice
+                GuestsNumber = newReservation.GuestsNumber
             };
 
             try
@@ -246,8 +245,7 @@ namespace HakunaMatata.API.Controllers
                 ReservationId = id,
                 CheckinDate = reservation.CheckinDate,
                 CheckoutDate = reservation.CheckoutDate,
-                GuestsNumber = reservation.GuestsNumber,
-                TotalPrice = reservation.TotalPrice
+                GuestsNumber = reservation.GuestsNumber
             };
 
             try

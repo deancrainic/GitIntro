@@ -32,7 +32,7 @@ namespace HakunaMatata.Application.CommandsHandlers
             {
                 throw new UserDoesNotHaveProperty("User doesn't have a property assigned");
             }
-            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
             var reservations = await _uow.ReservationRepository.GetAllAsync();
 
             var reservation = reservations.FirstOrDefault(r => r.ReservationId == request.ReservationId);

@@ -39,13 +39,15 @@ namespace HakunaMatata.Application.CommandsHandlers
             if (checkinDate > checkoutDate)
                 throw new InvalidDatesException("Checkin date can't be later than checkoutdate");
 
+            var totalPrice = (checkoutDate - checkinDate).Days * property.Price;
+
             var reservation = new Reservation
             {
                 Property = property,
                 CheckinDate = checkinDate,
                 CheckoutDate = checkoutDate,
                 GuestsNumber = request.GuestsNumber,
-                TotalPrice = request.TotalPrice
+                TotalPrice = totalPrice
             };
 
             await _uow.ReservationRepository.AddAsync(reservation);

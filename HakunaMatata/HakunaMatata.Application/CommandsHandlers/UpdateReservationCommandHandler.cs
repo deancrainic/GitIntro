@@ -38,14 +38,18 @@ namespace HakunaMatata.Application.CommandsHandlers
                 {
                     var property = res.Property;
 
+                    var checkinDate = DateTimeOffset.ParseExact(request.CheckinDate, "yyyy-MM-dd", null).UtcDateTime;
+                    var checkoutDate = DateTimeOffset.ParseExact(request.CheckoutDate, "yyyy-MM-dd", null).UtcDateTime;
+                    var totalPrice = (checkoutDate - checkinDate).Days * property.Price;
+
                     var updatedReservation = new Reservation
                     {
                         ReservationId = res.ReservationId,
                         Property = property,
-                        CheckinDate = DateTimeOffset.ParseExact(request.CheckinDate, "yyyy-MM-dd", null).UtcDateTime,
-                        CheckoutDate = DateTimeOffset.ParseExact(request.CheckoutDate, "yyyy-MM-dd", null).UtcDateTime,
+                        CheckinDate = checkinDate,
+                        CheckoutDate = checkoutDate,
                         GuestsNumber = request.GuestsNumber,
-                        TotalPrice = request.TotalPrice
+                        TotalPrice = totalPrice
                     };
 
                     if (request.GuestsNumber > property.MaxGuests)

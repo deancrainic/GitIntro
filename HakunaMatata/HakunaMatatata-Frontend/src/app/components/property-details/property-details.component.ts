@@ -57,6 +57,10 @@ export class PropertyDetailsComponent implements OnInit {
     private date: DatePipe,
     private matDialog: MatDialog) { }
 
+  formatDate(d: Date): Date {
+    return Methods.formatDate(d);
+  }
+
   ngOnInit(): void {
     this.activeRoute.params.subscribe(params => this.propertyId = params['id']);
     this.property = this.api.getPropertyById(this.propertyId);
@@ -73,15 +77,20 @@ export class PropertyDetailsComponent implements OnInit {
 
           let currentDate = new Date();
           currentDate.setDate(currentDate.getDate() - 1);
-
-          if (Methods.formatDate(d) < Methods.formatDate(currentDate)) {
+          
+          if (this.formatDate(d) < this.formatDate(currentDate)) {
             valid = false;
           }
 
           if (this.unavailableDays.length > 0) {
             this.unavailableDays.forEach(dr => {
-              if (Methods.formatDate(d) >= Methods.formatDate(new Date(dr.checkinDate)) && 
-                  Methods.formatDate(d) < Methods.formatDate(new Date(dr.checkoutDate))) {
+              let checkin = new Date(dr.checkinDate);
+              checkin.setDate(checkin.getDate() + 1);
+              let checkout = new Date(dr.checkoutDate);
+              checkout.setDate(checkout.getDate() + 1);
+
+              if (this.formatDate(d) > this.formatDate(checkin) && 
+                  this.formatDate(d) < this.formatDate(checkout)) {
                 valid = false;
               }
             });
@@ -89,6 +98,7 @@ export class PropertyDetailsComponent implements OnInit {
           return valid;
         };
       });
+      this.reservationForm.get('guests')?.setValue(this.guests);
     });
     
     this.subscription1 = this.transporter.currentEndDate.subscribe(d => this.endDate = d);
@@ -101,7 +111,6 @@ export class PropertyDetailsComponent implements OnInit {
 
     this.range.get('start')?.setValue(this.startDate);
     this.range.get('end')?.setValue(this.endDate);
-    this.reservationForm.get('guests')?.setValue(this.guests);
 
     this.acc.isLoggedIn.subscribe(x => this.loginStatus = x);
   }
@@ -123,8 +132,7 @@ export class PropertyDetailsComponent implements OnInit {
       propertyId: this.propertyId,
       checkinDate: this.date.transform(this.reservationForm.get('range.start')?.value, 'yyyy-MM-dd'),
       checkoutDate: this.date.transform(this.reservationForm.get('range.end')?.value, 'yyyy-MM-dd'),
-      guestsNumber: this.reservationForm.get('guests')?.value,
-      totalPrice: this.getTotalPrice(price)
+      guestsNumber: this.reservationForm.get('guests')?.value
     };
 
     if (this.loginStatus == true) {

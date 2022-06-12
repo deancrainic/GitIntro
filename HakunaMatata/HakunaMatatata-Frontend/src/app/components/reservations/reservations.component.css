@@ -30,3 +30,7 @@
     cursor: pointer;
     color: rgb(250, 83, 83);
 }
+
+.reservations {
+    width: 70rem;
+}
