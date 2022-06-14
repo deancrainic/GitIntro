@@ -31,6 +31,10 @@ export class ApiService {
     return this.http.get<IProperty[]>(this.baseUrl + '/api/Properties');
   }
 
+  getAllPropertiesSorted(sortType: number): Observable<IProperty[]> {
+    return this.http.get<IProperty[]>(`${this.baseUrl}/api/Properties/sorted/${sortType}`);
+  }
+
   getPropertyById(id: number): Observable<IProperty> {
     return this.http.get<IProperty>(`${this.baseUrl}/api/Properties/${id}`);
   }

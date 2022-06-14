@@ -2,6 +2,7 @@
 using HakunaMatata.Core.Abstractions;
 using HakunaMatata.Core.Enums;
 using HakunaMatata.Core.Models;
+using HakunaMatata.Data.Exceptions;
 using HakunaMatata.Data.Strategies;
 using MediatR;
 using System;
@@ -46,7 +47,15 @@ namespace HakunaMatata.Application.QueriesHandlers
                     sortedProperties = _sortContext.SortProperties(properties);
                     break;
                 default:
-                    sortedProperties = properties;
+                    _sortContext = new SortContext(null);
+                    try
+                    {
+                        sortedProperties = _sortContext.SortProperties(properties);
+                    }
+                    catch
+                    {
+                        throw;
+                    }
                     break;
             }
 

@@ -1,4 +1,5 @@
 ﻿using HakunaMatata.Core.Models;
+using HakunaMatata.Data.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,7 @@ namespace HakunaMatata.Data.Strategies
         {
             if (_strategy == null)
             {
-                //Console.WriteLine("No strategy");
-                return new List<Property>();
+                throw new StrategyDoesNotExistException("Strategy does not exist");
             }
             else
                 return _strategy.SortProperties(properties);

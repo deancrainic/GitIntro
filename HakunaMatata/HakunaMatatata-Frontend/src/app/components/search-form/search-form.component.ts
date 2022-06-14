@@ -25,6 +25,14 @@ export class SearchFormComponent implements OnInit {
  
   properties!: IProperty[];
   shownProperties!: IProperty[];
+  selectedOption = 0;
+
+  options = [
+    { name: 'Lowest price', value: 0 },
+    { name: 'Highest price', value: 1 },
+    { name: 'Newest', value: 2 },
+    { name: 'Oldest', value: 3 }
+  ];
 
   constructor(private api: ApiService, private transporter: ReservationDetailsTrasporterService) { }
 
@@ -32,29 +40,30 @@ export class SearchFormComponent implements OnInit {
     this.api.getAllProperties().subscribe(x => this.properties = x);
   }
 
-  onSubmit(): void {
-    this.shownProperties = this.properties
-      .filter(
-        p => p.address.toLowerCase().includes(this.searchViewModel.get('location')?.value.toLowerCase()) 
-            && p.maxGuests >= this.searchViewModel.get('guests')?.value)
-      .sort((p1, p2) => (p1.price > p2.price) ? 1 : -1);
+  onSubmit(): void {    
+    this.api.getAllPropertiesSorted(this.selectedOption).subscribe(
+      res => {
+        this.shownProperties = res.filter(
+          p => p.address.toLowerCase().includes(this.searchViewModel.get('location')?.value.toLowerCase()) 
+                && p.maxGuests >= this.searchViewModel.get('guests')?.value);
+        if (this.searchViewModel.get('range.start')?.value === '') {
+          this.transporter.changeStartDate(new Date());
+        } else {
+          this.transporter.changeStartDate(this.searchViewModel.get('range.start')?.value);
+        }
     
-    if (this.searchViewModel.get('range.start')?.value === '') {
-      this.transporter.changeStartDate(new Date());
-    } else {
-      this.transporter.changeStartDate(this.searchViewModel.get('range.start')?.value);
-    }
-
-    if (this.searchViewModel.get('range.end')?.value === '') {
-      this.transporter.changeEndDate(new Date());
-    } else {
-      this.transporter.changeEndDate(this.searchViewModel.get('range.end')?.value);
-    }
-
-    if (this.searchViewModel.get('guests')?.value === '') {
-      this.transporter.changeGuests(1);
-    } else {
-      this.transporter.changeGuests(this.searchViewModel.get('guests')?.value);
-    }
+        if (this.searchViewModel.get('range.end')?.value === '') {
+          this.transporter.changeEndDate(new Date());
+        } else {
+          this.transporter.changeEndDate(this.searchViewModel.get('range.end')?.value);
+        }
+    
+        if (this.searchViewModel.get('guests')?.value === '') {
+          this.transporter.changeGuests(1);
+        } else {
+          this.transporter.changeGuests(this.searchViewModel.get('guests')?.value);
+        }
+      }
+    );
   }
 }

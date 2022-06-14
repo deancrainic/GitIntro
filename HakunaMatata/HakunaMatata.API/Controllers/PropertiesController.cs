@@ -37,15 +37,24 @@ namespace HakunaMatata.API.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("sorted")]
-        public async Task<IActionResult> GetAllPropertiesSorted(Core.Enums.SortStrategyType sortType)
+        [Route("sorted/{sortType}")]
+        public async Task<IActionResult> GetAllPropertiesSorted(int sortType)
         {
-            var query = new GetAllPropertiesSortedQuery { StrategyType = sortType };
+            var strategy = (Core.Enums.SortStrategyType)sortType;
 
-            var result = await _mediator.Send(query);
-            var mappedResult = _mapper.Map<List<PropertyGetDto>>(result);
+            var query = new GetAllPropertiesSortedQuery { StrategyType = strategy };
+            try
+            {
+                var result = await _mediator.Send(query);
+                var mappedResult = _mapper.Map<List<PropertyGetDto>>(result);
 
-            return Ok(mappedResult);
+                return Ok(mappedResult);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         [HttpGet]

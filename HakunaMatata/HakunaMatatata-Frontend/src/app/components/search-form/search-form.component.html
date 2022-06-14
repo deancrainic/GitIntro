@@ -36,6 +36,15 @@
     </div>
 </div>
 
-<app-properties-list
-    [shownProperties]="this.shownProperties">
-</app-properties-list>
+<div style="width: 100%; display: flex; justify-content: center;">
+    <div style="display: flex; justify-content: flex-start">
+        <mat-form-field appearance="outline" class="select-field">
+            <mat-select [(ngModel)]="selectedOption" (selectionChange)="onSubmit()">
+                <mat-option *ngFor="let opt of options" [value]="opt.value">{{opt.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <app-properties-list
+            [shownProperties]="this.shownProperties">
+        </app-properties-list>
+    </div>
+</div>
