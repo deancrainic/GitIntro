@@ -36,6 +36,19 @@ namespace HakunaMatata.API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
+        [Route("sorted")]
+        public async Task<IActionResult> GetAllPropertiesSorted(Core.Enums.SortStrategyType sortType)
+        {
+            var query = new GetAllPropertiesSortedQuery { StrategyType = sortType };
+
+            var result = await _mediator.Send(query);
+            var mappedResult = _mapper.Map<List<PropertyGetDto>>(result);
+
+            return Ok(mappedResult);
+        }
+
+        [HttpGet]
         [Route("{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetPropertyById(int id)
