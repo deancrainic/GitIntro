@@ -16,7 +16,7 @@
             <span>
                 <mat-form-field appearance="outline">
                     <mat-label>Guests</mat-label>
-                    <input matInput placeholder="How many guests..."  formControlName="guests" type="number">
+                    <input matInput placeholder="How many guests..."  formControlName="guests" type="number" min="1">
                 </mat-form-field>
             </span>
 
@@ -26,7 +26,8 @@
         </form>
 
         <div class="error">
-            <p>{{this.reservationForm.get('guests')?.errors?.['invalidGuestsNumber'] ? 'Invalid guests number' : this.reserveErrorMessage}}</p>
+            <p *ngIf="this.reservationForm?.get('range.end')?.errors?.['invalidLength']">Stay must be at least 2 nights</p>
+            <p>{{this.reservationForm?.get('guests')?.errors?.['invalidGuestsNumber'] ? 'Invalid guests number' : this.reserveErrorMessage}}</p>
         </div>
         
         <div>

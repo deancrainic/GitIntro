@@ -39,7 +39,6 @@ namespace HakunaMatata.Application.CommandsHandlers
 
             await _uow.PropertyRepository.AddAsync(property);
 
-            
             user.Property = property;
             _uow.UserRepository.Update(user);
 

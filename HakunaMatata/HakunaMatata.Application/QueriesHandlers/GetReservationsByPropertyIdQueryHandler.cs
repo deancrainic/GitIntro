@@ -51,7 +51,7 @@ namespace HakunaMatata.Application.QueriesHandlers
                 };
 
                 reservationsForProperty.Add(res);
-                
+
             }
 
             return reservationsForProperty;

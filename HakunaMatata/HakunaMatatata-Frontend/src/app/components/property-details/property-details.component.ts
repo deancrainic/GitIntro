@@ -29,17 +29,13 @@ export class PropertyDetailsComponent implements OnInit {
   startDate!: Date;
   endDate!: Date;
   guests!: number;
-  range = new FormGroup({
-    start: new FormControl(this.startDate, [Validators.required]),
-    end: new FormControl(this.endDate, [Validators.required]),
-  });
 
+  range!: FormGroup;
   reservationForm!: FormGroup;
 
   subscription1!: Subscription;
   subscription2!: Subscription;
   subscription3!: Subscription;
-  subscription4!: Subscription;
 
   errorMessage!: string;
   unavailableDays!: DateRange[];
@@ -66,10 +62,16 @@ export class PropertyDetailsComponent implements OnInit {
     this.property = this.api.getPropertyById(this.propertyId);
     
     this.property.subscribe(res => {
+      this.range = new FormGroup({
+        start: new FormControl(new Date(new Date().setHours(0, 0, 0, 0)), [Validators.required]),
+        end: new FormControl(new Date(new Date().setHours(48, 0, 0, 0)), [Validators.required]),
+      }, CustomValidators.reservationLength('start', 'end'));
+
       this.reservationForm = new FormGroup({
         range: this.range,
         guests: new FormControl(this.guests, [Validators.required, CustomValidators.guestsNumber(res.maxGuests)])
       });
+      
       this.api.getReservationDatesByPropertyId(res.propertyId).subscribe(x => {
         this.unavailableDays = x;
         this.availableDays = (d: Date): boolean => {
@@ -87,7 +89,6 @@ export class PropertyDetailsComponent implements OnInit {
               let checkin = new Date(dr.checkinDate);
               checkin.setDate(checkin.getDate() + 1);
               let checkout = new Date(dr.checkoutDate);
-              checkout.setDate(checkout.getDate() + 1);
 
               if (this.formatDate(d) > this.formatDate(checkin) && 
                   this.formatDate(d) < this.formatDate(checkout)) {
@@ -97,22 +98,22 @@ export class PropertyDetailsComponent implements OnInit {
           }
           return valid;
         };
+        this.subscription1 = this.transporter.currentEndDate.subscribe(d => this.endDate = d);
+        this.subscription2 = this.transporter.currentStartDate.subscribe(d => this.startDate = d);
+        this.subscription3 = this.transporter.currentGuests.subscribe(g => this.guests = g);
+
+        this.reservationForm.get('guests')?.setValue(this.guests);
+        this.transporter.changeStartDate(this.startDate);
+        this.transporter.changeEndDate(this.endDate);
+        this.transporter.changeGuests(this.guests);
+
+        this.reservationForm.get('range.start')?.setValue(this.startDate);
+        this.reservationForm.get('range.end')?.setValue(this.endDate);
+        this.reservationForm.get('guests')?.setValue(this.guests);
       });
-      this.reservationForm.get('guests')?.setValue(this.guests);
+      
+      this.acc.isLoggedIn.subscribe(x => this.loginStatus = x);
     });
-    
-    this.subscription1 = this.transporter.currentEndDate.subscribe(d => this.endDate = d);
-    this.subscription2 = this.transporter.currentStartDate.subscribe(d => this.startDate = d);
-    this.subscription3 = this.transporter.currentGuests.subscribe(g => this.guests = g);
-
-    this.transporter.changeStartDate(this.startDate);
-    this.transporter.changeEndDate(this.endDate);
-    this.transporter.changeGuests(this.guests);
-
-    this.range.get('start')?.setValue(this.startDate);
-    this.range.get('end')?.setValue(this.endDate);
-
-    this.acc.isLoggedIn.subscribe(x => this.loginStatus = x);
   }
 
   ngOnDestroy(): void {
@@ -127,7 +128,7 @@ export class PropertyDetailsComponent implements OnInit {
     return price * Math.floor((this.reservationForm.get('range.end')?.value - this.reservationForm.get('range.start')?.value) / milisecondsPerDay)
   }
 
-  makeReservation(price: number): void {
+  makeReservation(): void {
     const reservation: IReservationCreate = {
       propertyId: this.propertyId,
       checkinDate: this.date.transform(this.reservationForm.get('range.start')?.value, 'yyyy-MM-dd'),
@@ -154,7 +155,6 @@ export class PropertyDetailsComponent implements OnInit {
       this.dialogConfig.width = "80%";
       this.modalDialog = this.matDialog.open(ViewImagesComponent, this.dialogConfig);
       this.modalDialog.componentInstance.property = res;
-      this.modalDialog.afterClosed().subscribe(res => this.ngOnInit()); 
     });
   }
 

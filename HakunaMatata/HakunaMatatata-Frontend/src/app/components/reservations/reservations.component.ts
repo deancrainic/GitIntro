@@ -21,8 +21,7 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
 
   reservations!: Observable<IReservation[]>;
   currentDate = new Date();
-  showEditForm = false;
-  displayedColumns = ['checkin', 'checkout', 'property', 'totalPrice', 'guests', 'buttons']
+  displayedColumns = ['checkin', 'checkout', 'property', 'price', 'guests', 'buttons']
 
   dialogConfig = new MatDialogConfig();
   modalDialog!: MatDialogRef<EditReservationComponent, any>;
@@ -58,27 +57,28 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
     this.dialogConfig.width = "620px";
     this.modalDialog = this.matDialog.open(EditReservationComponent, this.dialogConfig);
     this.modalDialog.componentInstance.reservationId = reservationId;
-    // this.modalDialog.afterClosed().subscribe(res => this.ngOnInit());
-    this.api.getReservations().subscribe(res => {
-      this.dataSource = new MatTableDataSource<IReservation>(res);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.dataSource.sortingDataAccessor = (item, prop) => {
-        switch (prop) {
-          case 'checkin':
-            return <string>this.date.transform(item.checkinDate, 'yyyy-MM-dd');
-          case 'checkout':
-            return <string>this.date.transform(item.checkoutDate, 'yyyy-MM-dd');
-          case 'property':
-            return item.property.name;
-          case 'price':
-            return item.totalPrice;
-          case 'guests':
-            return item.guestsNumber;
-          default:
-            return item.property.name;
+    this.modalDialog.afterClosed().subscribe(res => {
+      this.api.getReservations().subscribe(res => {
+        this.dataSource = new MatTableDataSource<IReservation>(res);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.dataSource.sortingDataAccessor = (item, prop) => {
+          switch (prop) {
+            case 'checkin':
+              return <string>this.date.transform(item.checkinDate, 'yyyy-MM-dd');
+            case 'checkout':
+              return <string>this.date.transform(item.checkoutDate, 'yyyy-MM-dd');
+            case 'property':
+              return item.property.name;
+            case 'price':
+              return item.totalPrice;
+            case 'guests':
+              return item.guestsNumber;
+            default:
+              return item.property.name;
+          }
         }
-      }
+      });
     });
   }
 
@@ -110,7 +110,10 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
   }
 
   checkDate(d: Date): boolean {
-    return (Methods.formatDate(d) < Methods.formatDate(this.currentDate))
+    if (Methods.formatDate(d).getDate() === this.currentDate.getDate())
+      return false;
+
+    return (Methods.formatDate(d) < this.currentDate)  
   }
 
   delete(reservationId: number): void {

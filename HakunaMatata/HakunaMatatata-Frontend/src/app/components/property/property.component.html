@@ -39,7 +39,10 @@
             <button mat-button class="action-button" (click)="viewImages()">View images</button>
         </div>
         <div>
-            <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;" multiple>
+            <input 
+                type="file" #file placeholder="Choose file" 
+                (change)="uploadFile(file.files)" style="display:none;" 
+                multiple accept="image/png, image/jpeg">
             <button type="button" mat-button (click)="file.click()">Upload Images</button>
           </div>
           <div>

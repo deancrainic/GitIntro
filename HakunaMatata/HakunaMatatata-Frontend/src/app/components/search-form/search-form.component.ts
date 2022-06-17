@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Methods } from 'src/app/methods/methods';
+import { CustomValidators } from 'src/app/validators/validators';
 import { IProperty } from '../../models/property';
 import { ApiService } from '../../services/api.service';
 import { ReservationDetailsTrasporterService } from '../../services/reservation-details-trasporter.service';
@@ -15,7 +16,7 @@ export class SearchFormComponent implements OnInit {
   range = new FormGroup({
     start: new FormControl(''),
     end: new FormControl(''),
-  });
+  }, CustomValidators.reservationLength('start', 'end'));
 
   searchViewModel = new FormGroup({
     location: new FormControl(''),
@@ -34,10 +35,24 @@ export class SearchFormComponent implements OnInit {
     { name: 'Oldest', value: 3 }
   ];
 
+  availableDays!:any;
+
   constructor(private api: ApiService, private transporter: ReservationDetailsTrasporterService) { }
 
   ngOnInit(): void {
     this.api.getAllProperties().subscribe(x => this.properties = x);
+    this.availableDays = (d: Date): boolean => {
+      let valid = true;
+
+      let currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() - 1);
+
+      if (Methods.formatDate(d) < Methods.formatDate(currentDate)) {
+        valid = false;
+      }
+
+      return valid;
+    };
   }
 
   onSubmit(): void {    

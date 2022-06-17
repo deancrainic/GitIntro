@@ -25,11 +25,7 @@ export class EditReservationComponent implements OnInit {
   reservationId!: number;
   property!: IReservationProperty;
 
-  range = new FormGroup({
-    start: new FormControl('', [Validators.required]),
-    end: new FormControl('', [Validators.required]),
-  });
-
+  range!: FormGroup;
   reservationForm!: FormGroup;
 
   unavailableDays!: DateRange[];
@@ -49,12 +45,14 @@ export class EditReservationComponent implements OnInit {
   ngOnInit(): void {
     this.api.getReservationById(this.reservationId).subscribe(res => {
       this.reservation = res,
+      this.range = new FormGroup({
+        start: new FormControl(this.formatDate(res.checkinDate), [Validators.required]),
+        end: new FormControl(this.formatDate(res.checkoutDate), [Validators.required]),
+      }, CustomValidators.reservationLength('start', 'end'));
       this.reservationForm = new FormGroup({
         range: this.range,
         guests: new FormControl('', [Validators.required, CustomValidators.guestsNumber(res.property.maxGuests)])
       });
-      this.range.controls['start'].setValue(this.formatDate(res.checkinDate));
-      this.range.controls['end'].setValue(this.formatDate(res.checkoutDate));
       this.reservationForm.controls['guests'].setValue(res.guestsNumber);
       this.property = res.property;
       
@@ -75,11 +73,10 @@ export class EditReservationComponent implements OnInit {
               let checkin = new Date(dr.checkinDate);
               checkin.setDate(checkin.getDate() + 1);
               let checkout = new Date(dr.checkoutDate);
-              checkout.setDate(checkout.getDate() + 1);
               if (this.formatDate(d) > this.formatDate(checkin) && 
                   this.formatDate(d) < this.formatDate(checkout) && 
                   (this.formatDate(d) < this.formatDate(this.reservation.checkinDate) ||
-                  this.formatDate(d) >= this.formatDate(this.reservation.checkoutDate))) {
+                  this.formatDate(d) > this.formatDate(this.reservation.checkoutDate))) {
                 valid = false;
               }
             });

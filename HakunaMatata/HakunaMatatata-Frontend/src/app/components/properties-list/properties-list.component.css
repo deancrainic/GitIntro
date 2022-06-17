@@ -2,7 +2,6 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    padding-top: 0.75rem;
 }
 
 .properties-list-container {
@@ -22,6 +21,7 @@
 
 .property-description {
     height: 3rem;
+    max-width: 90%;
 }
 
 .property-address {

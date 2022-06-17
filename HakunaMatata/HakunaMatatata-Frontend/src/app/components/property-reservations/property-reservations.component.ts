@@ -73,7 +73,7 @@ export class PropertyReservationsComponent implements OnInit, AfterViewInit {
   }
 
   checkDate(d: Date): boolean {
-    return (Methods.formatDate(d) < Methods.formatDate(new Date()));
+    return (Methods.formatDate(d) < new Date());
   }
 
   delete(reservationId: number): void {

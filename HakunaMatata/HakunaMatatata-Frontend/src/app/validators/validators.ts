@@ -18,8 +18,8 @@ export class CustomValidators {
         }
       }
       
-      static passwordMatch(password: string, confirmPassword: string):ValidatorFn {
-        return (formGroup: AbstractControl):{ [key: string]: any } | null => {
+      static passwordMatch(password: string, confirmPassword: string): ValidatorFn {
+        return (formGroup: AbstractControl): { [key: string]: any } | null => {
           const passwordControl = formGroup.get(password);
           const confirmPasswordControl = formGroup.get(confirmPassword);
           
@@ -42,6 +42,31 @@ export class CustomValidators {
             return null;
           }
         };
+      }
+
+      static reservationLength(startDate: string, endDate: string): ValidatorFn {
+        return (formGroup: AbstractControl): { [key: string]: any } | null => {
+          const startDateControl = formGroup.get(startDate);
+          const endDateControl = formGroup.get(endDate);
+
+          if (startDateControl?.value === '' || endDateControl?.value === '') {
+            return null;
+          }
+
+          if (!startDateControl || !endDateControl) {
+            return null;
+          }
+
+          console.log((endDateControl?.value?.getTime() - startDateControl?.value?.getTime()) / (1000 * 3600 * 24));
+          
+          if ((endDateControl?.value?.getTime() - startDateControl?.value?.getTime()) / (1000 * 3600 * 24) < 2) {
+            endDateControl.setErrors({ invalidLength: true });
+            return { invalidLength: true };
+          } else {
+            endDateControl.setErrors(null);
+            return null;
+          }
+        }
       }
 
       static guestsNumber(guestsNumber: number): ValidatorFn {

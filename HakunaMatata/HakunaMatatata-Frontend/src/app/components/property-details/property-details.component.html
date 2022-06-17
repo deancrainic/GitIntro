@@ -25,7 +25,7 @@
 
             <span class="reservation-form">
                 <mat-card-content>
-                    <form *ngIf="this.reservationForm" [formGroup]="this.reservationForm" (ngSubmit)="makeReservation(property.price)">
+                    <form *ngIf="this.reservationForm" [formGroup]="this.reservationForm" (ngSubmit)="makeReservation()">
                         <span>
                             <mat-form-field appearance="outline" color="primary">
                                 <mat-label>Enter a date range *</mat-label>
@@ -41,7 +41,7 @@
                         <span>
                             <mat-form-field appearance="outline">
                                 <mat-label>Guests</mat-label>
-                                <input matInput placeholder="How many guests..."  formControlName="guests" type="number">
+                                <input matInput placeholder="How many guests..."  formControlName="guests" type="number" min="1">
                             </mat-form-field>
                         </span>
             
@@ -50,6 +50,7 @@
                         </span>
 
                         <div class="error">
+                            <p *ngIf="this.reservationForm.get('range.end')?.errors?.['invalidLength']">Stay must be at least 2 nights</p>
                             <p>{{this.reservationForm.get('guests')?.errors?.['invalidGuestsNumber'] ? 'Invalid guests number' : this.errorMessage}}</p>
                         </div>
                     </form>
