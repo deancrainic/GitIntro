@@ -89,13 +89,16 @@ export class PropertyDetailsComponent implements OnInit {
               let checkin = new Date(dr.checkinDate);
               checkin.setDate(checkin.getDate() + 1);
               let checkout = new Date(dr.checkoutDate);
-
+              
               if (this.formatDate(d) > this.formatDate(checkin) && 
                   this.formatDate(d) < this.formatDate(checkout)) {
+                
+                
                 valid = false;
               }
             });
           }
+          
           return valid;
         };
         this.subscription1 = this.transporter.currentEndDate.subscribe(d => this.endDate = d);

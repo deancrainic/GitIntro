@@ -57,8 +57,6 @@ export class CustomValidators {
             return null;
           }
 
-          console.log((endDateControl?.value?.getTime() - startDateControl?.value?.getTime()) / (1000 * 3600 * 24));
-          
           if ((endDateControl?.value?.getTime() - startDateControl?.value?.getTime()) / (1000 * 3600 * 24) < 2) {
             endDateControl.setErrors({ invalidLength: true });
             return { invalidLength: true };

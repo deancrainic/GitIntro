@@ -62,13 +62,13 @@ export class SearchFormComponent implements OnInit {
           p => p.address.toLowerCase().includes(this.searchViewModel.get('location')?.value.toLowerCase()) 
                 && p.maxGuests >= this.searchViewModel.get('guests')?.value);
         if (this.searchViewModel.get('range.start')?.value === '') {
-          this.transporter.changeStartDate(new Date());
+          this.transporter.changeStartDate(new Date(new Date().setHours(0, 0, 0, 0)));
         } else {
           this.transporter.changeStartDate(this.searchViewModel.get('range.start')?.value);
         }
     
         if (this.searchViewModel.get('range.end')?.value === '') {
-          this.transporter.changeEndDate(new Date());
+          this.transporter.changeEndDate(new Date(new Date().setHours(48, 0, 0, 0)));
         } else {
           this.transporter.changeEndDate(this.searchViewModel.get('range.end')?.value);
         }

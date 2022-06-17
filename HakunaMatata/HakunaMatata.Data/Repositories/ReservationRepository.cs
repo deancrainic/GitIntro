@@ -78,7 +78,7 @@ namespace HakunaMatata.Data.Repositories
 
         public async Task<IEnumerable<Reservation>> GetByPropertyId(int id)
         {
-            var reservations = _dbSet.Include(r => r.Property).Where(r => r.Property.PropertyId == id && r.CheckinDate >= DateTime.UtcNow).ToListAsync();
+            var reservations = _dbSet.Include(r => r.Property).Where(r => r.Property.PropertyId == id).ToListAsync();
 
             return await reservations;
         }

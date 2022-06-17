@@ -15,7 +15,7 @@ export class PropertiesListComponent implements OnInit {
   @Input()
   shownProperties!: IProperty[];
 
-  constructor(private api: ApiService, private router: Router, private transporter: ReservationDetailsTrasporterService) { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
