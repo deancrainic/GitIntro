@@ -39,7 +39,7 @@ export class PropertyDetailsComponent implements OnInit {
 
   errorMessage!: string;
   unavailableDays!: DateRange[];
-  availableDays!:any;
+  availableDays!: any;
 
   dialogConfig = new MatDialogConfig();
   modalDialog!: MatDialogRef<ViewImagesComponent, any>;
